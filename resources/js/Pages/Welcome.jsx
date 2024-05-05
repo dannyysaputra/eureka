@@ -38,6 +38,23 @@ export default function Welcome({ auth, photoPath }) {
                         />
                     </div>
                 </div>
+                <div className="flex justify-around p-4 w-100 flex-wrap mx-10" style={{backgroundColor : "#02AF91"}}>       
+                    <div className="font-bold text-center">Elektro</div>
+                    <div className="font-bold text-center">Informatika</div>
+                    <div className="font-bold text-center">Fisika</div>
+                    <div className="font-bold text-center">Agroteknologi</div>
+                    <div className="font-bold text-center">Kimia</div>
+                    <div className="font-bold text-center">Matematika</div>
+                    <div className="font-bold xtext-center">Biologi</div>    
+                </div>   
+            </div>
+            
+            <div className="flex justify-left p-4 h-44 w-1/2 rounded-br-lg flex-wrap mx-10" style={{backgroundColor : "#02AF91"}}>       
+                    <div className="font-bold text-6xl text-center flex-auto">APA ITU EUREKA?</div>
+            </div>
+
+            <div className="justify-items-end p-4 h-44 w-1/2 rounded-br-lg flex-wrap mx-10" style={{backgroundColor : "#02AF91"}}>       
+                    <div className="font-bold text-xl text-center flex-auto">Nama Eureka! terinspirasi dari kata Yunani yang berarti “Saya menemukannya!” dan menunjukkan bahwa website ini dapat membantu user menemukan solusi untuk tugas SAINTEK.</div>
             </div>
         </MainLayout>
     );
