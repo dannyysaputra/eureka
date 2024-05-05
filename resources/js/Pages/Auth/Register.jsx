@@ -5,11 +5,15 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
+import MainLayout from '@/Layouts/MainLayout';
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
+        nim: '',
+        angkatan: '',
+        jurusan: '',
         password: '',
         password_confirmation: '',
     });
@@ -66,6 +70,54 @@ export default function Register() {
                 </div>
 
                 <div className="mt-4">
+                    <InputLabel htmlFor="nim" value="nim" />
+
+                    <TextInput
+                        id="nim"
+                        name="nim"
+                        value={data.nim}
+                        className="mt-1 block w-full"
+                        autoComplete="username"
+                        onChange={(e) => setData('nim', e.target.value)}
+                        required
+                    />
+
+                    <InputError message={errors.nim} className="mt-2" />
+                </div>
+
+                <div className="mt-4">
+                    <InputLabel htmlFor="angkatan" value="angkatan" />
+
+                    <TextInput
+                        id="angkatan"
+                        name="angkatan"
+                        value={data.angkatan}
+                        className="mt-1 block w-full"
+                        autoComplete="username"
+                        onChange={(e) => setData('angkatan', e.target.value)}
+                        required
+                    />
+
+                    <InputError message={errors.angkatan} className="mt-2" />
+                </div>
+
+                <div className="mt-4">
+                    <InputLabel htmlFor="jurusan" value="jurusan" />
+
+                    <TextInput
+                        id="jurusan"
+                        name="jurusan"
+                        value={data.jurusan}
+                        className="mt-1 block w-full"
+                        autoComplete="username"
+                        onChange={(e) => setData('jurusan', e.target.value)}
+                        required
+                    />
+
+                    <InputError message={errors.jurusan} className="mt-2" />
+                </div>
+
+                <div className="mt-4">
                     <InputLabel htmlFor="password" value="Password" />
 
                     <TextInput
@@ -106,10 +158,17 @@ export default function Register() {
                     >
                         Already registered?
                     </Link>
+                    <Link
+                        href={route('auth.google')}
+                        className="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                    >
+                        google
+                    </Link>
 
                     <PrimaryButton className="ms-4" disabled={processing}>
                         Register
                     </PrimaryButton>
+                    
                 </div>
             </form>
         </GuestLayout>
