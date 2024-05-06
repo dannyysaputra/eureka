@@ -78,8 +78,6 @@ export default function Welcome({ auth, photoPath }) {
                 <div className="flex justify-between items-center lg:px-8 lg:pt-8">
                     <EurekaLogo></EurekaLogo> 
                 </div>
-                
-
                 <div className="mt-2 px-9 font-bold text-2xl text-white">
                     <p>JADILAH YANG<br />PALING CERDAS</p>
                 </div>
