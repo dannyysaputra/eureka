@@ -20,7 +20,10 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Auth/Register');
+        $photoPath = '/images/form-bg.png';
+        $backgroundPath = '/images/auth-bg.png';
+
+        return Inertia::render('Auth/Register', ['photoPath' => $photoPath, 'backgroundPath' => $backgroundPath]);
     }
 
     /**

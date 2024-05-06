@@ -18,9 +18,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): Response
     {
+        $photoPath = '/images/form-bg.png';
+        $backgroundPath = '/images/auth-bg.png';
+
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
+            'photoPath' => $photoPath,
+            'backgroundPath' => $backgroundPath
         ]);
     }
 

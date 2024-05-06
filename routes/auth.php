@@ -37,7 +37,8 @@ Route::middleware('guest')->group(function () {
 
     Route::get('auth/google', [GoogleController::class, 'signInwithGoogle'])
                 ->name('auth.google');
-    Route::get('callback/google', [GoogleController::class, 'callbackToGoogle']);
+    Route::get('callback/google', [GoogleController::class, 'callbackToGoogle'])
+                ->name('callback');
 });
 
 Route::middleware('auth')->group(function () {

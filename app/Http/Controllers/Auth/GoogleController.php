@@ -16,7 +16,7 @@ class GoogleController extends Controller
 
     public function callbackToGoogle() {
         try {
-            $user = Socialite::driver('google')->user();
+            $user = Socialite::driver('google')->stateless()->user();
 
             $finduser = User::where('social_id', $user->id)->first();
 
@@ -38,9 +38,9 @@ class GoogleController extends Controller
 
                 Auth::login($newUser);
 
-                return redirect(route('dashboard', absolute: false));
+                return to_route('dashboard');
             }
-        } catch (Exeception $e) {
+        } catch (Exception $e) {
             dd($e->getMessage());
         }
     }

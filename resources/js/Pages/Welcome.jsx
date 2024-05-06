@@ -1,6 +1,5 @@
 import MainLayout from "@/Layouts/MainLayout";
 import { Head } from "@inertiajs/react";
-import { TERipple } from "tw-elements-react";
 
 export default function Welcome({ auth, photoPath }) {
     return (
