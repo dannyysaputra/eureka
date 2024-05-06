@@ -57,10 +57,10 @@ export default function Welcome({ auth, photoPath }) {
             </div>
 
             <div className="max-w-7xl mx-auto my-10 grid grid-cols-3 sm:px-6 lg:px-8">
-                <div className="flex-row size-4/5 mx-32">
+                <div className="flex-row size-4/5 mx-2">
                     <img
-                        className=""
-                        src="/images/two-person.png"
+                        className="" style={{maxWidth : 500}}
+                        src="/images/coding-2.png"
                         alt="Two-Person"
                     />
                 </div>
@@ -71,16 +71,15 @@ export default function Welcome({ auth, photoPath }) {
             </div>
             
             <div className="h-auto" style={{backgroundColor : "#02AF91"}}>
-                <div className="size-40 absolute right-0 h-auto mt-8">
-                    <img src="/images/saintek.png" alt="" />
+                <div className="flex justify-center">
+                    <div className="items-center h-auto">
+                        <img src="/images/saintek.png" alt="" />
+                    </div>
                 </div>
-                <div className="flex justify-between items-center lg:px-8 lg:pt-8">
-                    <EurekaLogo></EurekaLogo> 
+                <div className="flex justify-center mt-2 px-9 font-bold text-2xl text-white">
+                    <p>JADILAH YANG PALING CERDAS</p>
                 </div>
-                <div className="mt-2 px-9 font-bold text-2xl text-white">
-                    <p>JADILAH YANG<br />PALING CERDAS</p>
-                </div>
-                <div className="font-light text-center">Copyright reserved</div>
+                <div className="font-bold text-center text-white">Copyright reserved</div>
             </div>
         </MainLayout>
     );

@@ -64,7 +64,7 @@ export default function Register({ photoPath, backgroundPath }) {
                         </p>
                     </div>
                     <div className="mx-5">
-                        <form onSubmit={submit} className="p-5">
+                        <form onSubmit={submit} className="px-14 py-5">
                             <div className="my-8">
                                 <TextInput
                                     id="name"
