@@ -17,6 +17,10 @@ Route::get('/', function () {
     ]);
 })->name('welcome');
 
+Route::get('/question', function () {
+    $photoPath = '/images/nav-bg.png';
+    return Inertia::render('Question', ['photoPath' => $photoPath]);
+})->name('question');
 
 Route::get('/dashboard', function () {
     $photoPath = '/images/nav-bg.png';
