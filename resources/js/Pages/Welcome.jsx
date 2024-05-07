@@ -8,7 +8,7 @@ export default function Welcome({ auth, photoPath }) {
             <Head title="Welcome" />
 
             <div className="py-12">
-                <div className="max-w-7xl mx-auto grid grid-cols-3 sm:px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto grid grid-cols-5 sm:px-6 lg:px-8">
                     <div className="col-span-2 my-10">
                         <img src="/images/eureka.png" alt="" />
                         <p className="font-bold text-xl my-2 ms-1">
@@ -26,51 +26,72 @@ export default function Welcome({ auth, photoPath }) {
                                 <div className="rounded-r-lg bg-gray-600 p-2">
                                     <i class="fa-solid fa-magnifying-glass mx-4 my-auto bg-gray-600"></i>
                                 </div>
-                                
-                            </div>
-                            <div>
-                                Ajukan pertanyaan mu
                             </div>
                         </div>
                     </div>
-                    <div className="flex-row-reverse">
-                        <img
-                            className=""
-                            src="/images/hero.png"
-                            alt="Hero"
-                        />
+                    <div className="col-span-3">
+                        <div className="flex justify-end">
+                            <img
+                                style={{ height: "600px", width: "auto" }}
+                                className=""
+                                src="/images/welcome.png"
+                                alt="Hero"
+                            />
+                        </div>
                     </div>
                 </div>
-                <div className="flex justify-around p-4 w-100 flex-wrap mx-10" style={{backgroundColor : "#02AF91"}}>       
+                <div
+                    className="flex justify-around p-4 w-100 flex-wrap mx-10"
+                    style={{ backgroundColor: "#02AF91" }}
+                >
                     <div className="font-bold text-center">Elektro</div>
                     <div className="font-bold text-center">Informatika</div>
                     <div className="font-bold text-center">Fisika</div>
                     <div className="font-bold text-center">Agroteknologi</div>
                     <div className="font-bold text-center">Kimia</div>
                     <div className="font-bold text-center">Matematika</div>
-                    <div className="font-bold xtext-center">Biologi</div>    
-                </div>   
+                    <div className="font-bold xtext-center">Biologi</div>
+                </div>
             </div>
-            
-            <div className="flex justify-left p-10 h-44-auto w-1/2 rounded-br-lg flex-wrap my-10" style={{backgroundColor : "#02AF91"}}>       
-                    <div className="font-bold text-6xl text-center flex-auto text-white">APA ITU EUREKA?</div>
+
+            <div className="grid grid-cols-2">
+                <div className="mt-10">
+                    <div
+                        className="font-bold text-6xl text-center text-white py-14 rounded-br-lg"
+                        style={{ backgroundColor: "#02AF91" }}
+                    >
+                        APA ITU EUREKA?
+                    </div>
+                </div>
+                <div className="flex justify-end">
+                    <img src="/images/fst-illustration.png" alt="" />
+                </div>
             </div>
 
             <div className="max-w-7xl mx-auto my-10 grid grid-cols-3 sm:px-6 lg:px-8">
                 <div className="flex-row size-4/5 mx-2">
                     <img
-                        className="" style={{maxWidth : 500}}
+                        className=""
+                        style={{ maxWidth: 500 }}
                         src="/images/coding-2.png"
                         alt="Two-Person"
                     />
                 </div>
 
-                <div className="absolute right-0 p-10 h-44-auto w-1/2 rounded-bl-lg flex-wrap my-32" style={{backgroundColor : "#02AF91"}}>
-                        <div className="font-bold text-xl text-center text-white">Nama Eureka! terinspirasi dari kata Yunani yang berarti “Saya menemukannya!” dan menunjukkan bahwa website ini dapat membantu user menemukan solusi untuk tugas SAINTEK.</div> 
+                <div
+                    className="absolute right-0 p-10 h-44-auto w-1/2 rounded-bl-lg flex-wrap my-32"
+                    style={{ backgroundColor: "#02AF91" }}
+                >
+                    <div className="font-bold text-xl text-center text-white">
+                        Nama Eureka! terinspirasi dari kata Yunani yang berarti
+                        “Saya menemukannya!” dan menunjukkan bahwa website ini
+                        dapat membantu user menemukan solusi untuk tugas
+                        SAINTEK.
+                    </div>
                 </div>
             </div>
-            
-            <div className="h-auto" style={{backgroundColor : "#02AF91"}}>
+
+            <div className="h-auto pb-4" style={{ backgroundColor: "#02AF91" }}>
                 <div className="flex justify-center">
                     <div className="items-center h-auto">
                         <img src="/images/saintek.png" alt="" />
@@ -79,7 +100,9 @@ export default function Welcome({ auth, photoPath }) {
                 <div className="flex justify-center mt-2 px-9 font-bold text-2xl text-white">
                     <p>JADILAH YANG PALING CERDAS</p>
                 </div>
-                <div className="font-bold text-center text-white">Copyright reserved</div>
+                <div className="font-bold text-center mt-4 text-white">
+                    Copyright reserved
+                </div>
             </div>
         </MainLayout>
     );
