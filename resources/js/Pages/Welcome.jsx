@@ -90,20 +90,6 @@ export default function Welcome({ auth, photoPath }) {
                     </div>
                 </div>
             </div>
-
-            <div className="h-auto pb-4" style={{ backgroundColor: "#02AF91" }}>
-                <div className="flex justify-center">
-                    <div className="items-center h-auto">
-                        <img src="/images/saintek.png" alt="" />
-                    </div>
-                </div>
-                <div className="flex justify-center mt-2 px-9 font-bold text-2xl text-white">
-                    <p>JADILAH YANG PALING CERDAS</p>
-                </div>
-                <div className="font-bold text-center mt-4 text-white">
-                    Copyright reserved
-                </div>
-            </div>
         </MainLayout>
     );
 }
