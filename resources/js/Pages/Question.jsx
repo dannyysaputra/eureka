@@ -11,7 +11,8 @@ export default function Question({ auth, photoPath }) {
             <Head title="Question" />
 
             <div>
-                Halama Question
+                Halama Question <br />
+                <a href="ajukan-pertanyaan">link ke ajukan pertanyaan</a>
             </div>
         </QuestionLayout>
     );

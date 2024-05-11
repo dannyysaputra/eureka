@@ -17,10 +17,15 @@ Route::get('/', function () {
     ]);
 })->name('welcome');
 
-Route::get('/question', function () {
+Route::get('/pertanyaan', function () {
     $photoPath = '/images/nav-bg.png';
     return Inertia::render('Question', ['photoPath' => $photoPath]);
-})->name('question');
+})->name('pertanyaan');
+
+Route::get('/ajukan-pertanyaan', function () {
+    $photoPath = '/images/nav-bg.png';
+    return Inertia::render('AskQuestion', ['photoPath' => $photoPath]);
+})->name('ajukan-pertanyaan');
 
 Route::get('/dashboard', function () {
     $photoPath = '/images/nav-bg.png';
