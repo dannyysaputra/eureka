@@ -14,7 +14,7 @@ class MataKuliahSeeder extends Seeder
      */
     public function run(): void
     {
-        MataKuliah::truncate();
+        // MataKuliah::truncate();
 
         $json = File::get('database/data/mata-kuliah.json');
         $mataKuliahs = collect(json_decode($json));

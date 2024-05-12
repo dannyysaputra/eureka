@@ -7,13 +7,13 @@ import GoogleLogo from "@/Components/GoogleLogo";
 import TextInput from "@/Components/TextInput";
 import { Head, Link, useForm } from "@inertiajs/react";
 
-export default function Register({ photoPath, backgroundPath }) {
+export default function Register({ photoPath, backgroundPath, jurusans }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: "",
         email: "",
         nim: "",
         angkatan: "",
-        jurusan: "",
+        jurusanId: "",
         password: "",
         password_confirmation: "",
     });
@@ -26,6 +26,7 @@ export default function Register({ photoPath, backgroundPath }) {
 
     const submit = (e) => {
         e.preventDefault();
+        console.log(data);
 
         post(route("register"));
     };
@@ -49,10 +50,7 @@ export default function Register({ photoPath, backgroundPath }) {
             <div className="flex" style={formBackgroundStyle}>
                 <div className="flex-auto w-32">
                     <div className="flex justify-between mx-3">
-                        <Link
-                            href={route("welcome")}
-                            className="my-auto"
-                        >
+                        <Link href={route("welcome")} className="my-auto">
                             <ArrowButton></ArrowButton>
                         </Link>
                         <img src="/images/saintek.png" alt="" />
@@ -148,18 +146,26 @@ export default function Register({ photoPath, backgroundPath }) {
                             </div>
 
                             <div className="my-8">
-                                <TextInput
+                                <select
                                     id="jurusan"
-                                    name="jurusan"
-                                    value={data.jurusan}
-                                    className="mt-1 block w-full"
-                                    placeholder="Jurusan"
-                                    autoComplete="jurusan"
+                                    name="jurusanId"
+                                    value={data.jurusanId}
                                     onChange={(e) =>
-                                        setData("jurusan", e.target.value)
+                                        setData("jurusanId", e.target.value)
                                     }
+                                    className="p-2 focus:border-indigo-500 rounded-full shadow-sm block w-full border-gray-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                     required
-                                />
+                                >
+                                    <option value="">Pilih Jurusan</option>
+                                    {jurusans.map((jurusan) => (
+                                        <option
+                                            key={jurusan.id}
+                                            value={jurusan.id}
+                                        >
+                                            {jurusan.nama_jurusan}
+                                        </option>
+                                    ))}
+                                </select>
 
                                 <InputError
                                     message={errors.jurusan}

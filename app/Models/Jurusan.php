@@ -14,12 +14,12 @@ class Jurusan extends Model
         'nama_jurusan'
     ];
 
-    public function mataKuliah() : HasMany
+    public function mataKuliahs() : HasMany
     {
         return $this->hasMany(MataKuliah::class);
     }
 
-    public function user() : HasMany
+    public function users() : HasMany
     {
         return $this->hasMany(User::class);
     }

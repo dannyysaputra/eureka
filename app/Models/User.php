@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -24,7 +25,7 @@ class User extends Authenticatable
         'email',
         'nim',
         'angkatan',
-        'jurusan',
+        'jurusan_id',
         'password',
         'social_id',
         'social_type'
@@ -56,5 +57,10 @@ class User extends Authenticatable
     public function jurusan(): BelongsTo
     {
         return $this->belongsTo(Jurusan::class);
+    }
+
+    public function pertanyaan() : HasMany
+    {
+        return $this->hasMany(Pertanyaan::class);
     }
 }

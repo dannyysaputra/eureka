@@ -5,9 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class MataKuliah extends Model
+class Pertanyaan extends Model
 {
     use HasFactory;
 
@@ -15,13 +14,14 @@ class MataKuliah extends Model
         'id'
     ];
 
-    public function jurusan(): BelongsTo
+
+    public function mataKuliah(): BelongsTo
     {
-        return $this->belongsTo(Jurusan::class);
+        return $this->belongsTo(MataKuliah::class);
     }
 
-    public function pertanyaan() : HasMany
+    public function user(): BelongsTo
     {
-        return $this->hasMany(Pertanyaan::class);
+        return $this->belongsTo(User::class);
     }
 }
