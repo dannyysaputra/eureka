@@ -20,18 +20,7 @@ export default function MainLayout({ user, header, photoPath, children }) {
             <nav style={navbarStyle}>
                 <div className="flex justify-between items-center lg:px-8 lg:pt-5">
                     <EurekaLogo></EurekaLogo>
-                    <div className="relative mb-4 flex w-96 flex-wrap items-stretch">
-                        <input
-                            type="search"
-                            className="relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto bg-slate-200 rounded-l-3xl border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-secondary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-secondary"
-                            placeholder="Cari pertanyaan..."
-                            aria-label="Search"
-                            aria-describedby="button-addon1"
-                        />
-                        <div className="rounded-r-3xl bg-gray-600 p-2">
-                            <i class="fa-solid fa-magnifying-glass mx-4 my-auto bg-gray-600"></i>
-                        </div>
-                    </div>
+                    
                     <div className="flex gap-5">
                         <Link href="/pertanyaan">
                             <div className="text-lg font-black text-black">
@@ -56,8 +45,7 @@ export default function MainLayout({ user, header, photoPath, children }) {
             </nav>
 
             <div className="flex flex-row">
-                <div className="fixed">
-                    <div className="flex-none w-60 h-auto">
+                    <div className="float-start flex-none w-60 h-auto">
                         <div className="">
                             <div className="flex flex-col h-auto pt-10 px-7">
                                 <div className="flex flex-row">
@@ -137,30 +125,90 @@ export default function MainLayout({ user, header, photoPath, children }) {
                             </div>
                         </div>
                     </div>
+                <div className="fixed">
                 </div>
 
-                <div className="grow h-40 ms-64">
+                <div className="overflow-y-auto grow h-screen ms-4">
                     <main>{children}</main>
                 </div>
 
-                <div className="flex py-8 px-4">
-                    <div className="flex flex-col rounded-xl w-60 h-screen bg-gray-300">
-                        <div className="text-xl font-extrabold text-center p-4">
+                <div className=" float-right flex py-8 px-4">
+                    <div className="flex flex-col rounded-xl relative w-60 h-auto bg-gray-300">
+                        <div className="text-xl font-extrabold text-center px-4 pt-4">
                             Top Questions
                         </div>
-                        <div className="flex rounded-xl justify-center p-2 m-4 w-auto h-auto bg-white">
-                            <div className="">
-                                <p>Disini Pertanyaan</p>
+
+                        <div className="flex flex-col rounded-xl justify-center px-2 m-4 w-auto h-auto bg-white">
+                            <div className="underline underline-offset-4 mx-2 my-4">
+                                <p>Bagaimana membuat website dengan react?</p>
+                            </div>
+                            <div className="underline underline-offset-4 mx-2 my-4">
+                                <p>Bagaimana cara saya mengekspresikan sebagai server kustom di Next.js</p>
                             </div>
                         </div>
+
                         <div className="text-xl font-extrabold text-center p-4">
                             Popular Tags
                         </div>
-                        <div className="flex rounded-xl justify-center p-1 mx-4 w-auto h-auto bg-white">
-                            <div className="">
-                                <p>Disini Tags nya</p>
+
+                        <div>
+                            <div className="flex flex-row p-1 m-4">
+                                <div className="rounded-xl border-4 border-gray-400 justify-center px-2 py-1 w-auto h-auto bg-white">
+                                    <div>
+                                        <p>Aljabar</p>
+                                    </div>
+                                </div>
+                                <div className="absolute right-0 p-2">
+                                    99
+                                </div>
+                            </div>
+                            
+                            <div className="flex flex-row p-1 m-4">
+                                <div className=" rounded-xl border-4 border-gray-400 justify-center px-2 py-1 w-auto h-auto bg-white">
+                                    <div>
+                                        <p>Matematika Diskrit</p>
+                                    </div>
+                                </div>
+                                <div className="absolute right-0 p-2">
+                                    76
+                                </div>
+                            </div>
+
+                            <div className="flex flex-row p-1 m-4">
+                                <div className=" rounded-xl border-4 border-gray-400 justify-center px-2 py-1 w-auto h-auto bg-white">
+                                    <div>
+                                        <p>Alstruk</p>
+                                    </div>
+                                </div>
+                                <div className="absolute right-0 p-2">
+                                    72
+                                </div>
+                            </div>
+
+                            <div className="flex flex-row p-1 m-4">
+                                <div className=" rounded-xl border-4 border-gray-400 justify-center px-2 py-1 w-auto h-auto bg-white">
+                                    <div>
+                                        <p>Grafkom</p>
+                                    </div>
+                                </div>
+                                <div className="absolute right-0 p-2">
+                                    56
+                                </div>
+                            </div>
+
+                            <div className="flex flex-row p-1 m-4">
+                                <div className=" rounded-xl border-4 border-gray-400 justify-center px-2 py-1 w-auto h-auto bg-white">
+                                    <div>
+                                        <p>RPL</p>
+                                    </div>
+                                </div>
+                                <div className="absolute right-0 p-2">
+                                    24
+                                </div>
                             </div>
                         </div>
+                        
+                        
                     </div>
                 </div>
             </div>
