@@ -38,19 +38,75 @@ export default function Question({ auth, photoPath }) {
             
             <div className="flex justify-between px-8 pb-10">
                 <div className="grid content-center justify-center px-4 rounded-lg border-4 border-gray-400 w-32 h-14 mx-4">
-                    <div className="">Terbaru</div>
+                    <div className="font-bold">Terbaru</div>
                 </div>
                 <div className="grid content-center justify-center px-4 rounded-lg border-4 border-gray-400 w-32 h-14 mx-4">
-                    <div className="">Rekomendasi</div>
+                    <div className="font-bold">Rekomendasi</div>
                 </div>
                 <div className="grid content-center justify-center px-4 rounded-lg border-4 border-gray-400 w-32 h-14 mx-4">
-                    <div className="">Sering</div>
+                    <div className="font-bold">Tersering</div>
                 </div>
             </div>
 
             <div className="flex justify-center px-8 mx-4">
                 <div className="rounded-lg border bg-gray-300 w-screen h-auto">
-                    //Soal
+                    <div className="font-bold mx-6 my-8">Soal</div>
+                    <div className="flex flex-row w-full">
+                        <div className="flex flex-row ml-6">
+                            <img
+                                style={{
+                                    height: "25px",
+                                    width: "25px",
+                                }}
+                                src="/images/refresh.png"
+                                alt=""
+                            />
+                            <div className="font-bold mx-2 mb-8">
+                                User
+                            </div>
+                            <div className="mx-1">-</div>
+                            <div className="mx-2">Ask 11 Months ago</div>
+                        </div>
+                        <div className="flex flex-auto flex-row justify-between mr-8 mb-8">
+                            <div className="flex flex-row mr-4">
+                                <img
+                                    style={{
+                                        height: "30px",
+                                        width: "30px",
+                                    }}
+                                    src="/images/like.png"
+                                    alt=""
+                                />
+                                <div className="mx-1">2</div>
+                                <div className="">Vote</div>
+                            </div>
+                            <div className="flex flex-row mr-4">
+                                <img
+                                    style={{
+                                        height: "25px",
+                                        width: "25px",
+                                    }}
+                                    src="/images/answer.png"
+                                    alt=""
+                                />
+                                <div className="mx-1">2</div>
+                                <div className="">Jawaban</div>
+                            </div>
+                            <div className="flex flex-row ">
+                                <img
+                                    style={{
+                                        height: "25px",
+                                        width: "25px",
+                                    }}
+                                    src="/images/view.png"
+                                    alt=""
+                                />
+                                <div className="mx-1">2</div>
+                                <div className="">Lihat</div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </QuestionLayout>
