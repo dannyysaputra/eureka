@@ -18,6 +18,15 @@ export default function MainLayout({ user, header, photoPath, children }) {
         color: "white",
     };
 
+    const footerStyle = {
+        backgroundImage: `url(${photoPath})`,
+        backgroundSize: "cover",
+        backgroundRepeat: "repeat",
+        backgroundPosition: "center",
+        height: "auto",
+        color: "white",
+    }
+
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
             <nav style={navbarStyle}>
@@ -41,6 +50,23 @@ export default function MainLayout({ user, header, photoPath, children }) {
             </nav>
 
             <main>{children}</main>
+
+            <div className="h-auto" style={{ backgroundColor: "#02AF91" }}>
+                <nav style={footerStyle}>
+
+                <div className="flex justify-center">
+                    <div className="items-center h-auto p-4 mt-4">
+                        <EurekaLogo></EurekaLogo>
+                    </div>
+                </div>
+                <div className="flex justify-center mt-2 px-9 font-bold text-2xl text-white">
+                    <p>"JADILAH YANG PALING CERDAS"</p>
+                </div>
+                <div className="font-bold text-center py-4 text-white">
+                    Copyright reserved
+                </div>
+                </nav>
+            </div>
         </div>
     );
 }
