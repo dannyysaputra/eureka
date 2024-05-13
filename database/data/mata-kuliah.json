@@ -1,0 +1,359 @@
+[
+    {
+        "jurusan_id": 1,
+        "kode_matkul": "201004-705-01-001",
+        "nama_matkul": "Pengenalan Informatika",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 1,
+        "kode_matkul": "201004-705-01-002",
+        "nama_matkul": "Dasar Pemrograman",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 1,
+        "kode_matkul": "201004-705-01-003",
+        "nama_matkul": "Praktikum Dasar Pemrograman",
+        "sks": 1,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 1,
+        "kode_matkul": "201004-705-01-004",
+        "nama_matkul": "Kalkulus I",
+        "sks": 3,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 1,
+        "kode_matkul": "201004-705-02-002",
+        "nama_matkul": "Kewarganegaraan",
+        "sks": 1,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 1,
+        "kode_matkul": "201004-705-02-007",
+        "nama_matkul": "Ilmu Fiqh",
+        "sks": 1,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 1,
+        "kode_matkul": "201004-705-02-010",
+        "nama_matkul": "Bahasa Arab",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 1,
+        "kode_matkul": "201004-705-02-011",
+        "nama_matkul": "Bahasa Inggris I",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 1,
+        "kode_matkul": "201004-705-02-013",
+        "nama_matkul": "Fisika Dasar",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 1,
+        "kode_matkul": "201004-705-02-014",
+        "nama_matkul": "Praktikum Fisika Dasar",
+        "sks": 1,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 1,
+        "kode_matkul": "201004-705-03-001",
+        "nama_matkul": "Olah Raga",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 2,
+        "kode_matkul": "UN211701",
+        "nama_matkul": "Bahasa Indonesia dan Tata Tulis Ilmiah",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 2,
+        "kode_matkul": "EL211001",
+        "nama_matkul": "Penganar Analisis Rangkaian",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 2,
+        "kode_matkul": "EL211002",
+        "nama_matkul": "Kalkulus I",
+        "sks": 3,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 2,
+        "kode_matkul": "EL211003",
+        "nama_matkul": "Fisika Dasar I",
+        "sks": 3,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 2,
+        "kode_matkul": "EL211004",
+        "nama_matkul": "Praktikum Fisika Dasar I",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 2,
+        "kode_matkul": "EL211005",
+        "nama_matkul": "Pemrograman I",
+        "sks": 3,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 2,
+        "kode_matkul": "EL211006",
+        "nama_matkul": "Prakikum Pemrograman I",
+        "sks": 1,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 2,
+        "kode_matkul": "EL211007",
+        "nama_matkul": "Kimia Dasar",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 2,
+        "kode_matkul": "EL211008",
+        "nama_matkul": "Praktikum Kimia Dasar",
+        "sks": 1,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 2,
+        "kode_matkul": "EL211009",
+        "nama_matkul": "Pengantar Teknologi Informasi",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 5,
+        "kode_matkul": "UN211401",
+        "nama_matkul": "Ulumul Qur'an",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 5,
+        "kode_matkul": "UN211402",
+        "nama_matkul": "Pancasila dan Kewarganegaraan",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 5,
+        "kode_matkul": "UN211403",
+        "nama_matkul": "English for Chemistry",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 5,
+        "kode_matkul": "KI211001",
+        "nama_matkul": "Kimia Dasar 1",
+        "sks": 3,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 5,
+        "kode_matkul": "KI211002",
+        "nama_matkul": "Penataan dan Keselamatan Lab",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 5,
+        "kode_matkul": "KI211003",
+        "nama_matkul": "Praktikum Teknik Dasar Laboratorium ",
+        "sks": 1,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 5,
+        "kode_matkul": "KI211004",
+        "nama_matkul": "Matematika Untuk Kimia 1",
+        "sks": 3,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 5,
+        "kode_matkul": "KI211005",
+        "nama_matkul": "Fisika Untuk Kimia ",
+        "sks": 3,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 5,
+        "kode_matkul": "KI211006",
+        "nama_matkul": "Praktikum Fisika ",
+        "sks": 1,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 5,
+        "kode_matkul": "KI211007",
+        "nama_matkul": "Biologi Untuk Kimia  ",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 6,
+        "kode_matkul": "20100470102001",
+        "nama_matkul": "Pancasila",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 6,
+        "kode_matkul": "20100470102002",
+        "nama_matkul": "Kewarganegaraan",
+        "sks": 1,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 6,
+        "kode_matkul": "20100470102004",
+        "nama_matkul": "Ilmu Tauhid",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 6,
+        "kode_matkul": "20100470102005",
+        "nama_matkul": "Ulumul Qur'an",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 6,
+        "kode_matkul": "70101001",
+        "nama_matkul": "Kalkulus I",
+        "sks": 4,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 6,
+        "kode_matkul": "70101002",
+        "nama_matkul": "Dasar-dasar Matematika",
+        "sks": 3,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 6,
+        "kode_matkul": "70101003",
+        "nama_matkul": "Dasar-dasar Pemrograman",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 6,
+        "kode_matkul": "70101004",
+        "nama_matkul": "Praktikum Dasar-Dasar Pemrograman",
+        "sks": 1,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 6,
+        "kode_matkul": "70101005",
+        "nama_matkul": "Statistika Dasar",
+        "sks": 3,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 7,
+        "kode_matkul": "U216101",
+        "nama_matkul": "Bahasa Indonesia ",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 7,
+        "kode_matkul": "U216102",
+        "nama_matkul": "Bahasa Inggris",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 7,
+        "kode_matkul": "BI16145",
+        "nama_matkul": "Biokalkulus",
+        "sks": 3,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 7,
+        "kode_matkul": "BI16101",
+        "nama_matkul": "Biologi Dasar",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 7,
+        "kode_matkul": "BI16143",
+        "nama_matkul": "Fisika Dasar",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 7,
+        "kode_matkul": "U216107",
+        "nama_matkul": "Ilmu Tauhid",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 7,
+        "kode_matkul": "BI16141",
+        "nama_matkul": "Kimia Dasar",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 7,
+        "kode_matkul": "BI16104",
+        "nama_matkul": "Pengetahuan Lingkungan",
+        "sks": 2,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 7,
+        "kode_matkul": "BI16102",
+        "nama_matkul": "Praktikum Biologi Dasar",
+        "sks": 1,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 7,
+        "kode_matkul": "BI16144",
+        "nama_matkul": "Praktikum Fisika Dasar",
+        "sks": 1,
+        "semester": "1"
+    },
+    {
+        "jurusan_id": 7,
+        "kode_matkul": "BI16142",
+        "nama_matkul": "Praktikum Kimia Dasar",
+        "sks": 1,
+        "semester": "1"
+    }
+]
