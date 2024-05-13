@@ -18,12 +18,14 @@ Route::get('/', function () {
     ]);
 })->name('welcome');
 
-Route::get('/pertanyaan', [QuestionController::class, 'index'])->name('pertanyaan');
 
-Route::get('/dashboard', function () {
-    $photoPath = '/images/nav-bg.png';
-    return Inertia::render('Dashboard', ['photoPath' => $photoPath]);
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/pertanyaan', [QuestionController::class, 'index'])->name('pertanyaan');
+Route::get('/detail-pertanyaan/{id}', [QuestionController::class, 'show'])->name('detail-pertanyaan');
+
+// Route::get('/dashboard', function () {
+//     $photoPath = '/images/nav-bg.png';
+//     return Inertia::render('Dashboard', ['photoPath' => $photoPath]);
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/ajukan-pertanyaan', [QuestionController::class, 'askQuestion'])->name('ajukan-pertanyaan');
