@@ -21,6 +21,7 @@ Route::get('/', function () {
 
 Route::get('/pertanyaan', [QuestionController::class, 'index'])->name('pertanyaan');
 Route::get('/detail-pertanyaan/{id}', [QuestionController::class, 'show'])->name('detail-pertanyaan');
+Route::post('/pertanyaan/{id}', [QuestionController::class, 'likePost'])->name('like');
 
 // Route::get('/dashboard', function () {
 //     $photoPath = '/images/nav-bg.png';

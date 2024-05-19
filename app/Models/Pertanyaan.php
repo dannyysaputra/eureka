@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Conner\Likeable\Likeable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,8 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Pertanyaan extends Model
 {
-    use HasFactory;
-    use HasUuids;
+    use HasFactory, HasUuids, Likeable;
 
     protected $guarded = [
         'id'

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\QuestionLiked;
 use App\Models\Jurusan;
 use App\Models\MataKuliah;
 use App\Models\Pertanyaan;
@@ -19,7 +20,7 @@ class QuestionController extends Controller
 {
     public function index(): Response
     {
-        $pertanyaans = Pertanyaan::join('users', 'pertanyaans.user_id', '=', 'users.id')
+        $pertanyaans = Pertanyaan::with('likes')->join('users', 'pertanyaans.user_id', '=', 'users.id')
         ->select('pertanyaans.*', DB::raw("SUBSTRING_INDEX(users.name, ' ', 1) as nama_depan"))
         ->get()
         ->map(function ($pertanyaan) {
@@ -68,6 +69,21 @@ class QuestionController extends Controller
             'photoPath' => $photoPath,
             'mataKuliahs' => $mataKuliahs
         ]);
+    }
+
+    public function likePost($id)
+    {
+        $pertanyaan = Pertanyaan::find($id);
+
+        if ($pertanyaan->liked()) {
+            $pertanyaan->unlike($id);
+        }else{
+            $pertanyaan->like();
+        }
+        
+        $pertanyaan->save();
+
+        QuestionLiked::dispatch($pertanyaan->load(['likes']));
     }
 
     public function store(Request $request): RedirectResponse
