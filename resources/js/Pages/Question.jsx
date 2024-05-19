@@ -1,7 +1,39 @@
 import QuestionLayout from "@/Layouts/QuestionLayout";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, useForm } from "@inertiajs/react";
+import { useRef, useEffect, useState } from "react";
+import "../echo";
+import Echo from "laravel-echo";
 
 export default function Question({ auth, photoPath, pertanyaans }) {
+    // const pertanyaanRef = useRef(pertanyaans);
+    const [questions, setQuestions] = useState(pertanyaans || []);
+    const { post } = useForm();
+
+    useEffect(() => {
+        if (!window.Echo) {
+            console.error("Echo not initialized properly");
+            return;
+        }
+
+        console.log("Setting up Echo listener");
+        const channel = window.Echo.channel("question-liked");
+
+        const listener = ({ question }) => {
+            console.log("Received question liked event", question);
+            setQuestions((prevQuestions) =>
+                prevQuestions.map((q) =>
+                    q.id === question.id ? { ...q, likes: question.likes } : q
+                )
+            );
+        };
+
+        channel.listen("QuestionLiked", listener);
+
+        return () => {
+            channel.stopListening("QuestionLiked", listener);
+        };
+    }, []);
+
     return (
         <QuestionLayout
             user={auth.user}
@@ -58,76 +90,83 @@ export default function Question({ auth, photoPath, pertanyaans }) {
                 </div>
             </div>
 
-            {pertanyaans.map((pertanyaan) => (
-                <Link href={`/detail-pertanyaan/${pertanyaan.id}`}>
-                    <div className="flex justify-center px-8 mx-4 mt-5">
-                        <div className="rounded-lg border bg-gray-300 w-screen h-auto">
+            {questions?.map((pertanyaan) => (
+                <div className="flex justify-center px-8 mx-4 mt-5">
+                    <div className="rounded-lg border bg-gray-300 w-screen h-auto">
+                        <Link href={`/detail-pertanyaan/${pertanyaan.id}`}>
                             <div className="font-bold mx-6 my-8">
                                 {pertanyaan.judul}
                             </div>
                             <div className="mx-6 font-semibold my-8">
                                 {pertanyaan.deskripsi}
                             </div>
-                            <div className="flex flex-row w-full">
-                                <div className="flex flex-row ml-6">
+                        </Link>
+                        <div className="flex flex-row w-full">
+                            <div className="flex flex-row ml-6">
+                                <img
+                                    style={{
+                                        height: "25px",
+                                        width: "25px",
+                                    }}
+                                    src="/images/refresh.png"
+                                    alt=""
+                                />
+                                <div className="font-bold mb-8">
+                                    {pertanyaan.nama_depan}
+                                </div>
+                                <div className="mx-1">-</div>
+                                <div className="mx-2">
+                                    Ask {pertanyaan.timeAgo}
+                                </div>
+                            </div>
+                            <div className="flex flex-auto flex-row justify-between mr-8 mb-8">
+                                <div
+                                    className="flex flex-row mr-4"
+                                    onClick={() =>
+                                        post(`/pertanyaan/${pertanyaan.id}`)
+                                    }
+                                >
+                                    <img
+                                        style={{
+                                            height: "30px",
+                                            width: "30px",
+                                        }}
+                                        src="/images/like.png"
+                                        alt=""
+                                    />
+                                    <div className="mx-1">
+                                        {pertanyaan.likes.length}
+                                    </div>
+                                    <div className="">Vote</div>
+                                </div>
+                                <div className="flex flex-row mr-4">
                                     <img
                                         style={{
                                             height: "25px",
                                             width: "25px",
                                         }}
-                                        src="/images/refresh.png"
+                                        src="/images/answer.png"
                                         alt=""
                                     />
-                                    <div className="font-bold mb-8">
-                                        {pertanyaan.nama_depan}
-                                    </div>
-                                    <div className="mx-1">-</div>
-                                    <div className="mx-2">
-                                        Ask {pertanyaan.timeAgo}
-                                    </div>
+                                    <div className="mx-1">2</div>
+                                    <div className="">Jawaban</div>
                                 </div>
-                                <div className="flex flex-auto flex-row justify-between mr-8 mb-8">
-                                    <div className="flex flex-row mr-4">
-                                        <img
-                                            style={{
-                                                height: "30px",
-                                                width: "30px",
-                                            }}
-                                            src="/images/like.png"
-                                            alt=""
-                                        />
-                                        <div className="mx-1">2</div>
-                                        <div className="">Vote</div>
-                                    </div>
-                                    <div className="flex flex-row mr-4">
-                                        <img
-                                            style={{
-                                                height: "25px",
-                                                width: "25px",
-                                            }}
-                                            src="/images/answer.png"
-                                            alt=""
-                                        />
-                                        <div className="mx-1">2</div>
-                                        <div className="">Jawaban</div>
-                                    </div>
-                                    <div className="flex flex-row ">
-                                        <img
-                                            style={{
-                                                height: "25px",
-                                                width: "25px",
-                                            }}
-                                            src="/images/view.png"
-                                            alt=""
-                                        />
-                                        <div className="mx-1">2</div>
-                                        <div className="">Lihat</div>
-                                    </div>
+                                <div className="flex flex-row ">
+                                    <img
+                                        style={{
+                                            height: "25px",
+                                            width: "25px",
+                                        }}
+                                        src="/images/view.png"
+                                        alt=""
+                                    />
+                                    <div className="mx-1">2</div>
+                                    <div className="">Lihat</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </Link>
+                </div>
             ))}
         </QuestionLayout>
     );
