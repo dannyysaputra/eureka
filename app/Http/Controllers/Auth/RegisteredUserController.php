@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Jurusan;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -22,8 +23,13 @@ class RegisteredUserController extends Controller
     {
         $photoPath = '/images/form-bg.png';
         $backgroundPath = '/images/auth-bg.png';
+        $jurusans = Jurusan::all();
 
-        return Inertia::render('Auth/Register', ['photoPath' => $photoPath, 'backgroundPath' => $backgroundPath]);
+        return Inertia::render('Auth/Register', [
+            'photoPath' => $photoPath, 
+            'backgroundPath' => $backgroundPath,
+            'jurusans' => $jurusans
+        ]);
     }
 
     /**
@@ -31,14 +37,14 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): Response
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'nim' => 'required|string|lowercase|max:11|unique:'.User::class,
             'angkatan' => 'required|string|max:5',
-            'jurusan' => 'required|string|max:255',
+            'jurusanId' => 'required',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -47,7 +53,7 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'nim' => $request->nim,
             'angkatan' => $request->angkatan,
-            'jurusan' => $request->jurusan,
+            'jurusan_id' => $request->jurusanId,
             'password' => Hash::make($request->password),
         ]);
 
@@ -55,6 +61,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return Inertia::render('pertanyaan');
     }
 }
