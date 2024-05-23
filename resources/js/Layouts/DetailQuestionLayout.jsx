@@ -55,6 +55,11 @@ export default function DetailQuestionLayout({ user, header, photoPath, children
                                         Profile
                                     </Dropdown.Link>
                                     <Dropdown.Link
+                                        href={route("pertanyaan-saya")}
+                                    >
+                                        Pertanyaan Saya
+                                    </Dropdown.Link>
+                                    <Dropdown.Link
                                         href={route("logout")}
                                         method="post"
                                         as="button"
