@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\QuestionLiked;
+use App\Models\Jawaban;
 use App\Models\Jurusan;
 use App\Models\MataKuliah;
 use App\Models\Pertanyaan;
@@ -20,8 +21,11 @@ class QuestionController extends Controller
 {
     public function index(): Response
     {
-        $pertanyaans = Pertanyaan::with('likes')->join('users', 'pertanyaans.user_id', '=', 'users.id')
-        ->select('pertanyaans.*', DB::raw("SUBSTRING_INDEX(users.name, ' ', 1) as nama_depan"))
+        $pertanyaans = Pertanyaan::with(['likes' => function ($query) {
+            $query->select('likeable_id', 'user_id');
+        }])->join('users', 'pertanyaans.user_id', '=', 'users.id')
+        ->join('mata_kuliahs', 'pertanyaans.matkul_id', '=', 'mata_kuliahs.id')
+        ->select('pertanyaans.*', DB::raw("SUBSTRING_INDEX(users.name, ' ', 1) as nama_depan"), 'mata_kuliahs.nama_matkul as matkul_name')
         ->get()
         ->map(function ($pertanyaan) {
             $deskripsi = Str::limit(strip_tags($pertanyaan->deskripsi), 100); // Hanya ambil 100 karakter
@@ -36,28 +40,75 @@ class QuestionController extends Controller
                 'timeAgo' => $timeAgo,
             ]);
         });
+
+        $topCourses = DB::table('pertanyaans')
+        ->join('mata_kuliahs', 'pertanyaans.matkul_id', '=', 'mata_kuliahs.id')
+        ->select('pertanyaans.matkul_id', 'mata_kuliahs.nama_matkul as matkul_name', DB::raw('count(*) as total_questions'))
+        ->groupBy('pertanyaans.matkul_id', 'mata_kuliahs.nama_matkul') 
+        ->orderByDesc('total_questions')
+        ->limit(5)
+        ->get();
         
 
         $photoPath = '/images/nav-bg.png';
         return Inertia::render('Question', [
             'photoPath' => $photoPath,
-            'pertanyaans' => $pertanyaans
+            'pertanyaans' => $pertanyaans,
+            'topCourses' => $topCourses
         ]);
     }
+    
 
     public function show($id): Response
     {
-        $pertanyaan = Pertanyaan::where('id', $id)->first();
+        $pertanyaan = Pertanyaan::with('user.jurusan')
+            ->where('pertanyaans.id', $id)
+            ->join('users', 'pertanyaans.user_id', '=', 'users.id')
+            ->join('jurusans', 'users.jurusan_id', '=', 'jurusans.id')
+            ->select('pertanyaans.*', 'users.name as user_name', 'jurusans.nama_jurusan as jurusan_name')
+            ->first();
+
+        $pertanyaan->deskripsi = strip_tags($pertanyaan->deskripsi);
+
+        $jawabans = Jawaban::where('jawabans.pertanyaan_id', $id)
+            ->with(['likes' => function ($query) {
+                $query->select('likeable_id', 'user_id');
+            }])
+            ->join('users', 'jawabans.user_id', '=', 'users.id')
+            ->join('jurusans', 'users.jurusan_id', '=', 'jurusans.id')
+            ->select('jawabans.*', 'users.name as user_name', 'jurusans.nama_jurusan as jurusan_name')
+            ->get();
 
         $photoPath = '/images/nav-bg.png';
         return Inertia::render('DetailQuestion', [
             'photoPath' => $photoPath,
-            'pertanyaan' => $pertanyaan
+            'pertanyaan' => $pertanyaan,
+            'jawabans' => $jawabans
         ]);
     }
 
     public function askQuestion(): Response
     {
+        $pertanyaans = Pertanyaan::with(['likes' => function ($query) {
+                $query->select('likeable_id', 'user_id');
+            }])->join('users', 'pertanyaans.user_id', '=', 'users.id')
+            ->join('mata_kuliahs', 'pertanyaans.matkul_id', '=', 'mata_kuliahs.id')
+            ->get()
+            ->map(function ($pertanyaan) {
+                $deskripsi = Str::limit(strip_tags($pertanyaan->deskripsi), 100); // Hanya ambil 100 karakter
+                return array_merge($pertanyaan->toArray(), [
+                    'deskripsi' => $deskripsi
+                ]);
+        });
+
+        $topCourses = DB::table('pertanyaans')
+            ->join('mata_kuliahs', 'pertanyaans.matkul_id', '=', 'mata_kuliahs.id')
+            ->select('pertanyaans.matkul_id', 'mata_kuliahs.nama_matkul as matkul_name', DB::raw('count(*) as total_questions'))
+            ->groupBy('pertanyaans.matkul_id', 'mata_kuliahs.nama_matkul')
+            ->orderByDesc('total_questions')
+            ->limit(5)
+            ->get();
+
         $photoPath = '/images/nav-bg.png';
 
         $user = Auth::user();
@@ -66,6 +117,8 @@ class QuestionController extends Controller
         $mataKuliahs = MataKuliah::where('jurusan_id', $jurusan->id)->get();
 
         return Inertia::render('AskQuestion', [
+            'pertanyaans' => $pertanyaans,
+            'topCourses' => $topCourses,
             'photoPath' => $photoPath,
             'mataKuliahs' => $mataKuliahs
         ]);
@@ -76,7 +129,7 @@ class QuestionController extends Controller
         $pertanyaan = Pertanyaan::find($id);
 
         if ($pertanyaan->liked()) {
-            $pertanyaan->unlike($id);
+            $pertanyaan->unlike();
         }else{
             $pertanyaan->like();
         }
