@@ -57,7 +57,39 @@ class QuestionController extends Controller
             'topCourses' => $topCourses
         ]);
     }
-    
+
+    public function store(Request $request): RedirectResponse
+    {
+        $user = Auth::user();
+        $userId = $user->id;
+
+        $request->validate([
+            'judul' => 'required|string|max:255',
+            'deskripsi' => 'required',
+            'mataKuliah' => 'required'
+        ]);
+
+        $pertanyaan = Pertanyaan::create([
+            'judul' => $request->judul,
+            'deskripsi' => $request->deskripsi,
+            'matkul_id' => $request->mataKuliah,
+            'user_id' => $userId,
+            'created_at' => now()
+        ]);
+
+        $pertanyaan->save();
+        
+        return redirect(route('pertanyaan', absolute: false));
+    }
+
+    public function destroy($id): RedirectResponse
+    {
+        $pertanyaan = Pertanyaan::findOrFail($id);
+        $pertanyaan->delete();
+
+        return redirect(route('pertanyaan-saya', absolute:false));
+    }
+
 
     public function show($id): Response
     {
@@ -84,6 +116,40 @@ class QuestionController extends Controller
             'photoPath' => $photoPath,
             'pertanyaan' => $pertanyaan,
             'jawabans' => $jawabans
+        ]);
+    }
+
+    public function myQuestion(): Response
+    {
+        $user = Auth::user();
+
+        $pertanyaans = Pertanyaan::with(['likes' => function ($query) {
+                $query->select('likeable_id', 'user_id');
+            }])
+            ->join('users', 'pertanyaans.user_id', '=', 'users.id')
+            ->join('jurusans', 'users.jurusan_id', '=', 'jurusans.id')
+            ->where('pertanyaans.user_id', $user->id)
+            ->select('pertanyaans.*', DB::raw("SUBSTRING_INDEX(users.name, ' ', 1) as nama_depan"), 'jurusans.nama_jurusan as jurusan_name')
+            ->get()
+            ->map(function ($pertanyaan) {
+                $deskripsi = Str::limit(strip_tags($pertanyaan->deskripsi), 100); // Hanya ambil 100 karakter
+    
+                // Hitung waktu yang sudah berlalu
+                $createdAt = Carbon::parse($pertanyaan->created_at);
+                $daysAgo = $createdAt->floatDiffInDays(); // Selisih hari    
+                $timeAgo = $daysAgo < 30 ? round($daysAgo) . ' days ago' : $createdAt->diffForHumans(); // Format "x days ago" atau "x months ago"
+    
+                return array_merge($pertanyaan->toArray(), [
+                    'deskripsi' => $deskripsi,
+                    'timeAgo' => $timeAgo,
+                ]);
+            });
+
+        $photoPath = '/images/nav-bg.png';
+        
+        return Inertia::render('MyQuestion', [
+            'photoPath' => $photoPath,
+            'pertanyaans' => $pertanyaans
         ]);
     }
 
@@ -137,29 +203,5 @@ class QuestionController extends Controller
         $pertanyaan->save();
 
         QuestionLiked::dispatch($pertanyaan->load(['likes']));
-    }
-
-    public function store(Request $request): RedirectResponse
-    {
-        $user = Auth::user();
-        $userId = $user->id;
-
-        $request->validate([
-            'judul' => 'required|string|max:255',
-            'deskripsi' => 'required',
-            'mataKuliah' => 'required'
-        ]);
-
-        $pertanyaan = Pertanyaan::create([
-            'judul' => $request->judul,
-            'deskripsi' => $request->deskripsi,
-            'matkul_id' => $request->mataKuliah,
-            'user_id' => $userId,
-            'created_at' => now()
-        ]);
-
-        $pertanyaan->save();
-        
-        return redirect(route('pertanyaan', absolute: false));
     }
 }
