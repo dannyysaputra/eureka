@@ -34,7 +34,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/jawaban/{id}/like', [AnswerController::class, 'likeAnswer'])->name('likeAnswer');
     
     Route::get('/pertanyaan', [QuestionController::class, 'index'])->name('pertanyaan');
+    Route::get('/edit-pertanyaan/{id}', [QuestionController::class, 'updateView'])->name('pertanyaan.updateView');
     Route::delete('/pertanyaan/{id}', [QuestionController::class, 'destroy'])->name('pertanyaan.destroy');
+    Route::put('/pertanyaan/{id}', [QuestionController::class, 'update'])->name('pertanyaan.update');
 
     Route::get('/detail-pertanyaan/{id}', [QuestionController::class, 'show'])->name('detail-pertanyaan');
     Route::post('/pertanyaan/{id}/like', [QuestionController::class, 'likePost'])->name('like');

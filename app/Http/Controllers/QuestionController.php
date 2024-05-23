@@ -82,6 +82,26 @@ class QuestionController extends Controller
         return redirect(route('pertanyaan', absolute: false));
     }
 
+    public function update(Request $request, $id) : RedirectResponse 
+    {
+        $pertanyaan = Pertanyaan::findOrFail($id);
+
+        $request->validate([
+            'judul' => 'required|string|max:255',
+            'deskripsi' => 'required',
+            'mataKuliah' => 'required'
+        ]);
+
+        $pertanyaan->judul = $request->judul;
+        $pertanyaan->deskripsi = $request->deskripsi;
+        $pertanyaan->matkul_id = $request->mataKuliah;
+        $pertanyaan->updated_at = now();
+
+        $pertanyaan->save();
+
+        return redirect(route('pertanyaan', absolute: false));
+    }
+
     public function destroy($id): RedirectResponse
     {
         $pertanyaan = Pertanyaan::findOrFail($id);
@@ -89,7 +109,6 @@ class QuestionController extends Controller
 
         return redirect(route('pertanyaan-saya', absolute:false));
     }
-
 
     public function show($id): Response
     {
@@ -150,6 +169,52 @@ class QuestionController extends Controller
         return Inertia::render('MyQuestion', [
             'photoPath' => $photoPath,
             'pertanyaans' => $pertanyaans
+        ]);
+    }
+
+    public function updateView($id): Response
+    {
+        // for top question
+        $pertanyaans = Pertanyaan::with(['likes' => function ($query) {
+                $query->select('likeable_id', 'user_id');
+            }])->join('users', 'pertanyaans.user_id', '=', 'users.id')
+            ->join('mata_kuliahs', 'pertanyaans.matkul_id', '=', 'mata_kuliahs.id')
+            ->get()
+            ->map(function ($pertanyaan) {
+                $deskripsi = Str::limit(strip_tags($pertanyaan->deskripsi), 100); // Hanya ambil 100 karakter
+                return array_merge($pertanyaan->toArray(), [
+                    'deskripsi' => $deskripsi
+                ]);
+        });
+
+        $pertanyaan = Pertanyaan::with('user.jurusan')
+            ->where('pertanyaans.id', $id)
+            ->join('users', 'pertanyaans.user_id', '=', 'users.id')
+            ->join('jurusans', 'users.jurusan_id', '=', 'jurusans.id')
+            ->select('pertanyaans.*', 'users.name as user_name', 'jurusans.nama_jurusan as jurusan_name')
+            ->first();
+
+        $topCourses = DB::table('pertanyaans')
+            ->join('mata_kuliahs', 'pertanyaans.matkul_id', '=', 'mata_kuliahs.id')
+            ->select('pertanyaans.matkul_id', 'mata_kuliahs.nama_matkul as matkul_name', DB::raw('count(*) as total_questions'))
+            ->groupBy('pertanyaans.matkul_id', 'mata_kuliahs.nama_matkul')
+            ->orderByDesc('total_questions')
+            ->limit(5)
+            ->get();
+
+        $photoPath = '/images/nav-bg.png';
+
+        $user = Auth::user();
+        $jurusan = $user->jurusan;
+
+        $mataKuliahs = MataKuliah::where('jurusan_id', $jurusan->id)->get();
+
+        return Inertia::render('UpdateQuestion', [
+            'pertanyaans' => $pertanyaans,
+            'topCourses' => $topCourses,
+            'photoPath' => $photoPath,
+            'mataKuliahs' => $mataKuliahs,
+            'pertanyaan' => $pertanyaan
         ]);
     }
 
