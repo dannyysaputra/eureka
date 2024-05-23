@@ -1,11 +1,9 @@
 import QuestionLayout from "@/Layouts/QuestionLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "../echo";
-import Echo from "laravel-echo";
 
-export default function Question({ auth, photoPath, pertanyaans }) {
-    // const pertanyaanRef = useRef(pertanyaans);
+export default function Question({ auth, photoPath, pertanyaans, topCourses }) {
     const [questions, setQuestions] = useState(pertanyaans || []);
     const { post } = useForm();
 
@@ -15,11 +13,9 @@ export default function Question({ auth, photoPath, pertanyaans }) {
             return;
         }
 
-        console.log("Setting up Echo listener");
         const channel = window.Echo.channel("question-liked");
 
         const listener = ({ question }) => {
-            console.log("Received question liked event", question);
             setQuestions((prevQuestions) =>
                 prevQuestions.map((q) =>
                     q.id === question.id ? { ...q, likes: question.likes } : q
@@ -34,6 +30,15 @@ export default function Question({ auth, photoPath, pertanyaans }) {
         };
     }, []);
 
+    const handleLike = (questionId) => {
+        post(`/pertanyaan/${questionId}/like`);
+    };
+
+    const userHasLiked = (likes) => {
+        const userLiked = likes.some((like) => like.user_id == auth.user.id);
+        return userLiked;
+    };
+
     return (
         <QuestionLayout
             user={auth.user}
@@ -43,6 +48,8 @@ export default function Question({ auth, photoPath, pertanyaans }) {
                 </h2>
             }
             photoPath={photoPath}
+            pertanyaans={pertanyaans}
+            topCourses={topCourses}
         >
             <Head title="Question" />
 
@@ -101,8 +108,8 @@ export default function Question({ auth, photoPath, pertanyaans }) {
                                 {pertanyaan.deskripsi}
                             </div>
                         </Link>
-                        <div className="flex flex-row w-full">
-                            <div className="flex flex-row ml-6">
+                        <div className="flex justify-evenly">
+                            <div className="flex">
                                 <img
                                     style={{
                                         height: "25px",
@@ -114,55 +121,50 @@ export default function Question({ auth, photoPath, pertanyaans }) {
                                 <div className="font-bold mb-8">
                                     {pertanyaan.nama_depan}
                                 </div>
-                                <div className="mx-1">-</div>
-                                <div className="mx-2">
-                                    Ask {pertanyaan.timeAgo}
-                                </div>
                             </div>
-                            <div className="flex flex-auto flex-row justify-between mr-8 mb-8">
-                                <div
-                                    className="flex flex-row mr-4"
-                                    onClick={() =>
-                                        post(`/pertanyaan/${pertanyaan.id}`)
-                                    }
-                                >
-                                    <img
-                                        style={{
-                                            height: "30px",
-                                            width: "30px",
-                                        }}
-                                        src="/images/like.png"
-                                        alt=""
-                                    />
-                                    <div className="mx-1">
-                                        {pertanyaan.likes.length}
-                                    </div>
-                                    <div className="">Vote</div>
+                            <div className="mx-1">-</div>
+                            <div className="mx-2">Ask {pertanyaan.timeAgo}</div>
+                            <div
+                                className="flex flex-row mr-4"
+                                onClick={() => handleLike(pertanyaan.id)}
+                            >
+                                <div>
+                                    <i
+                                        className={`fa-lg ${
+                                            userHasLiked(pertanyaan.likes)
+                                                ? "fa-solid fa-heart"
+                                                : "fa-regular fa-heart"
+                                        }`}
+                                    ></i>
                                 </div>
-                                <div className="flex flex-row mr-4">
-                                    <img
-                                        style={{
-                                            height: "25px",
-                                            width: "25px",
-                                        }}
-                                        src="/images/answer.png"
-                                        alt=""
-                                    />
-                                    <div className="mx-1">2</div>
-                                    <div className="">Jawaban</div>
+                                <div className="mx-1">
+                                    {pertanyaan.likes.length}
                                 </div>
-                                <div className="flex flex-row ">
-                                    <img
-                                        style={{
-                                            height: "25px",
-                                            width: "25px",
-                                        }}
-                                        src="/images/view.png"
-                                        alt=""
-                                    />
-                                    <div className="mx-1">2</div>
-                                    <div className="">Lihat</div>
-                                </div>
+                                <div className="">Likes</div>
+                            </div>
+                            <div className="flex flex-row mr-4">
+                                <img
+                                    style={{
+                                        height: "25px",
+                                        width: "25px",
+                                    }}
+                                    src="/images/answer.png"
+                                    alt=""
+                                />
+                                <div className="mx-1">2</div>
+                                <div className="">Jawaban</div>
+                            </div>
+                            <div className="flex flex-row ">
+                                <img
+                                    style={{
+                                        height: "25px",
+                                        width: "25px",
+                                    }}
+                                    src="/images/view.png"
+                                    alt=""
+                                />
+                                <div className="mx-1">2</div>
+                                <div className="">Lihat</div>
                             </div>
                         </div>
                     </div>
