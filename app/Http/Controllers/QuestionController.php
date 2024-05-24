@@ -28,6 +28,7 @@ class QuestionController extends Controller
         ->when($search, function ($query, $search) {
             return $query->where('pertanyaans.judul', 'like', "%{$search}%")
                 ->orWhere('pertanyaans.deskripsi', 'like', "%{$search}%");
+                // ->orWhere('pertanyaans.mata_kuliah', 'like', "%{$search}%");
         })
         ->with('mataKuliah')
         ->get()

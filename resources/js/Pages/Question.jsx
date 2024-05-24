@@ -17,6 +17,7 @@ export default function Question({
     const [sortByDate, setSortByDate] = useState(false);
     const [filterJurusan, setFilterJurusan] = useState(false);
     const [filterJawaban, setFilterJawaban] = useState(false);
+    const [matkulId, setMatkulId] = useState(null);
 
     const { post } = useForm();
 
@@ -65,12 +66,19 @@ export default function Question({
 
     const handleFilterByJawaban = () => {
         setFilterJawaban(!filterJawaban);
-    };
+    };  
+
+    const handleFilterByMatkul = (id) => {
+        setMatkulId(id);
+    }
 
     const filteredQuestions = questions
         .filter((question) => {
             if (filterJurusan) {
                 return question.mata_kuliah.jurusan_id === auth.user.jurusan_id;
+            }
+            if (matkulId) {
+                return question.matkul_id === matkulId;
             }
             return true;
         })
@@ -84,7 +92,7 @@ export default function Question({
             return 0;
         });
 
-        console.log(questions);
+        // console.log(questions);
 
 
     const handleLike = (questionId) => {
@@ -108,6 +116,7 @@ export default function Question({
             pertanyaans={pertanyaans}
             topCourses={topCourses}
             topQuestions={topQuestions}
+            handleFilterByMatkul={handleFilterByMatkul}
         >
             <Head title="Question" />
 
@@ -149,17 +158,17 @@ export default function Question({
             </form>
 
             <div className="flex justify-between px-8 pb-10">
-                <div className="grid content-center justify-center px-4 rounded-lg border-4 border-gray-400 w-32 h-14 mx-4">
+                <div className="grid content-center justify-center px-4 rounded-lg border-4 border-gray-400 w-32 h-14 mx-4 hover:border-gray-600">
                     <button onClick={handleSortByDate}>
                         <div className="font-bold">Terbaru</div>
                     </button>
                 </div>
-                <div className="grid content-center justify-center px-4 rounded-lg border-4 border-gray-400 w-32 h-14 mx-4">
+                <div className="grid content-center justify-center px-4 rounded-lg border-4 border-gray-400 w-32 h-14 mx-4 hover:border-gray-600">
                     <button onClick={handleFilterByJurusan}>
                         <div className="font-bold">Rekomendasi</div>
                     </button>
                 </div>
-                <div className="grid content-center justify-center px-4 rounded-lg border-4 border-gray-400 w-32 h-14 mx-4">
+                <div className="grid content-center justify-center px-4 rounded-lg border-4 border-gray-400 w-32 h-14 mx-4 hover:border-gray-600">
                     <button onClick={handleFilterByJawaban}>
                         <div className="font-bold">Tersering</div>
                     </button>
