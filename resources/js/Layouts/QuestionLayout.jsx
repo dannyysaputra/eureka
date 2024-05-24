@@ -5,16 +5,14 @@ import { Link } from "@inertiajs/react";
 
 export default function QuestionLayout({
     user,
-    pertanyaans,
     photoPath,
     children,
     topCourses,
+    topQuestions,
 }) {
-    const sortedPertanyaanByLikes = [...pertanyaans].sort(
+    const sortedPertanyaanByLikes = [...topQuestions].sort(
         (a, b) => b.likes.length - a.likes.length
     );
-
-    console.log(topCourses);
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
@@ -188,9 +186,13 @@ export default function QuestionLayout({
                             {sortedPertanyaanByLikes
                                 .slice(0, 3)
                                 .map((pertanyaan) => (
-                                    <div className="underline underline-offset-4 mx-2 my-4">
-                                        <p>{pertanyaan.deskripsi}</p>
-                                    </div>
+                                    <>
+                                        <Link href={`/detail-pertanyaan/${pertanyaan.id}`}>
+                                            <div className="underline underline-offset-4 mx-2 my-4">
+                                                <p>{pertanyaan.deskripsi}</p>
+                                            </div>
+                                        </Link>
+                                    </>
                                 ))}
                         </div>
                         <div className="text-xl font-extrabold text-center p-4">

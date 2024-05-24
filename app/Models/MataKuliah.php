@@ -20,8 +20,8 @@ class MataKuliah extends Model
         return $this->belongsTo(Jurusan::class);
     }
 
-    public function pertanyaan() : HasMany
+    public function pertanyaans() : HasMany
     {
-        return $this->hasMany(Pertanyaan::class);
+        return $this->hasMany(Pertanyaan::class, 'matkul_id');
     }
 }

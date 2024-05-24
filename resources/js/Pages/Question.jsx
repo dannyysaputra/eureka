@@ -2,10 +2,35 @@ import QuestionLayout from "@/Layouts/QuestionLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import "../echo";
+import { Inertia } from "@inertiajs/inertia";
 
-export default function Question({ auth, photoPath, pertanyaans, topCourses }) {
+export default function Question({
+    auth,
+    photoPath,
+    pertanyaans,
+    topCourses,
+    search,
+    topQuestions,
+}) {
     const [questions, setQuestions] = useState(pertanyaans || []);
+    const [searchQuery, setSearchQuery] = useState(search || "");
+    const [sortByDate, setSortByDate] = useState(false);
+    const [filterJurusan, setFilterJurusan] = useState(false);
+    const [filterJawaban, setFilterJawaban] = useState(false);
+
     const { post } = useForm();
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        Inertia.get(
+            route("pertanyaan"),
+            { search: searchQuery },
+            {
+                preserveState: true,
+                replace: true,
+            }
+        );
+    };
 
     useEffect(() => {
         if (!window.Echo) {
@@ -30,6 +55,38 @@ export default function Question({ auth, photoPath, pertanyaans, topCourses }) {
         };
     }, []);
 
+    const handleSortByDate = () => {
+        setSortByDate(!sortByDate);
+    };
+
+    const handleFilterByJurusan = () => {
+        setFilterJurusan(!filterJurusan);
+    };
+
+    const handleFilterByJawaban = () => {
+        setFilterJawaban(!filterJawaban);
+    };
+
+    const filteredQuestions = questions
+        .filter((question) => {
+            if (filterJurusan) {
+                return question.mata_kuliah.jurusan_id === auth.user.jurusan_id;
+            }
+            return true;
+        })
+        .sort((a, b) => {
+            if (filterJawaban) {
+                return b.jawabans_count - a.jawabans_count;
+            }
+            if (sortByDate) {
+                return new Date(b.updated_at) - new Date(a.updated_at);
+            }
+            return 0;
+        });
+
+        console.log(questions);
+
+
     const handleLike = (questionId) => {
         post(`/pertanyaan/${questionId}/like`);
     };
@@ -50,6 +107,7 @@ export default function Question({ auth, photoPath, pertanyaans, topCourses }) {
             photoPath={photoPath}
             pertanyaans={pertanyaans}
             topCourses={topCourses}
+            topQuestions={topQuestions}
         >
             <Head title="Question" />
 
@@ -69,35 +127,46 @@ export default function Question({ auth, photoPath, pertanyaans, topCourses }) {
                     </a>
                 </div>
             </div>
-
-            <div className="flex justify-center px-8 py-10">
-                <div className="relative m-4 flex w-screen flex-wrap items-stretch">
-                    <input
-                        type="search"
-                        className="relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto bg-slate-200 rounded-l-3xl border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-secondary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-secondary"
-                        placeholder="Cari pertanyaan..."
-                        aria-label="Search"
-                        aria-describedby="button-addon1"
-                    />
-                    <div className="rounded-r-3xl bg-gray-600 p-2">
-                        <i class="fa-solid fa-magnifying-glass mx-4 my-auto bg-gray-600"></i>
+            <form onSubmit={handleSearch} className="w-full">
+                <div className="flex justify-center px-8 py-10">
+                    <div className="relative m-4 flex w-screen flex-wrap items-stretch">
+                        <input
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            type="search"
+                            className="relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto bg-slate-200 rounded-l-3xl border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-secondary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-secondary"
+                            placeholder="Cari pertanyaan..."
+                            aria-label="Search"
+                            aria-describedby="button-addon1"
+                        />
+                        <button type="submit">
+                            <div className="rounded-r-3xl bg-gray-600 p-2 flex items-center">
+                                <i className="fa-solid fa-magnifying-glass mx-4 my-auto bg-gray-600"></i>
+                            </div>
+                        </button>
                     </div>
                 </div>
-            </div>
+            </form>
 
             <div className="flex justify-between px-8 pb-10">
                 <div className="grid content-center justify-center px-4 rounded-lg border-4 border-gray-400 w-32 h-14 mx-4">
-                    <div className="font-bold">Terbaru</div>
+                    <button onClick={handleSortByDate}>
+                        <div className="font-bold">Terbaru</div>
+                    </button>
                 </div>
                 <div className="grid content-center justify-center px-4 rounded-lg border-4 border-gray-400 w-32 h-14 mx-4">
-                    <div className="font-bold">Rekomendasi</div>
+                    <button onClick={handleFilterByJurusan}>
+                        <div className="font-bold">Rekomendasi</div>
+                    </button>
                 </div>
                 <div className="grid content-center justify-center px-4 rounded-lg border-4 border-gray-400 w-32 h-14 mx-4">
-                    <div className="font-bold">Tersering</div>
+                    <button onClick={handleFilterByJawaban}>
+                        <div className="font-bold">Tersering</div>
+                    </button>
                 </div>
             </div>
 
-            {questions?.map((pertanyaan) => (
+            {filteredQuestions?.map((pertanyaan) => (
                 <div className="flex justify-center px-8 mx-4 mt-5">
                     <div className="rounded-lg border bg-gray-300 w-screen h-auto">
                         <Link href={`/detail-pertanyaan/${pertanyaan.id}`}>
@@ -151,7 +220,7 @@ export default function Question({ auth, photoPath, pertanyaans, topCourses }) {
                                     src="/images/answer.png"
                                     alt=""
                                 />
-                                <div className="mx-1">2</div>
+                                <div className="mx-1">{pertanyaan.jawabans_count}</div>
                                 <div className="">Jawaban</div>
                             </div>
                             <div className="flex flex-row ">

@@ -6,7 +6,14 @@ import RichTextEditor from "@/Components/RichTextEditor";
 import { Head, useForm } from "@inertiajs/react";
 import { useState } from "react";
 
-export default function AskQuestion({ auth, photoPath, mataKuliahs, pertanyaans, topCourses }) {
+export default function AskQuestion({
+    auth,
+    photoPath,
+    mataKuliahs,
+    pertanyaans,
+    topCourses,
+    topQuestions,
+}) {
     console.log(mataKuliahs);
 
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -50,6 +57,7 @@ export default function AskQuestion({ auth, photoPath, mataKuliahs, pertanyaans,
             photoPath={photoPath}
             pertanyaans={pertanyaans}
             topCourses={topCourses}
+            topQuestions={topQuestions}
         >
             <Head title="Ajukan Pertanyaan" />
 

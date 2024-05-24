@@ -20,7 +20,7 @@ class Pertanyaan extends Model
 
     public function mataKuliah(): BelongsTo
     {
-        return $this->belongsTo(MataKuliah::class);
+        return $this->belongsTo(MataKuliah::class, 'matkul_id'); 
     }
 
     public function user(): BelongsTo
