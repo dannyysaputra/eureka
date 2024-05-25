@@ -66,11 +66,11 @@ export default function Question({
 
     const handleFilterByJawaban = () => {
         setFilterJawaban(!filterJawaban);
-    };  
+    };
 
     const handleFilterByMatkul = (id) => {
         setMatkulId(id);
-    }
+    };
 
     const filteredQuestions = questions
         .filter((question) => {
@@ -92,8 +92,7 @@ export default function Question({
             return 0;
         });
 
-        // console.log(questions);
-
+    // console.log(questions);
 
     const handleLike = (questionId) => {
         post(`/pertanyaan/${questionId}/like`);
@@ -179,8 +178,26 @@ export default function Question({
                 <div className="flex justify-center px-8 mx-4 mt-5">
                     <div className="rounded-lg border bg-gray-300 w-screen h-auto">
                         <Link href={`/detail-pertanyaan/${pertanyaan.id}`}>
-                            <div className="font-bold mx-6 my-8">
-                                {pertanyaan.judul}
+                            <div className="flex justify-between my-8">
+                                <div className="font-bold mx-6">
+                                    {pertanyaan.judul}
+                                </div>
+                                {pertanyaan.is_answered && (
+                                    <div className="flex me-3">
+                                        <div className="">
+                                            <i
+                                                class="fa-regular fa-circle-check fa-xl"
+                                                style={{ color: "#02AF91" }}
+                                            ></i>
+                                        </div>
+                                        <p
+                                            className="ms-2"
+                                            style={{ color: "#02AF91" }}
+                                        >
+                                            Terjawab
+                                        </p>
+                                    </div>
+                                )}
                             </div>
                             <div className="mx-6 font-semibold my-8">
                                 {pertanyaan.deskripsi}
@@ -229,7 +246,9 @@ export default function Question({
                                     src="/images/answer.png"
                                     alt=""
                                 />
-                                <div className="mx-1">{pertanyaan.jawabans_count}</div>
+                                <div className="mx-1">
+                                    {pertanyaan.jawabans_count}
+                                </div>
                                 <div className="">Jawaban</div>
                             </div>
                             <div className="flex flex-row ">
