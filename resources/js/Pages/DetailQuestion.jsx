@@ -15,25 +15,36 @@ export default function DetailQuestion({
 
     useEffect(() => {
         if (!window.Echo) {
-            console.error('Echo not intialized properly');
+            console.error("Echo not intialized properly");
             return;
         }
 
-        const channel = window.Echo.channel('answer-liked');
+        const channel = window.Echo.channel("answer-liked");
 
         const listener = ({ answers }) => {
-            setAnswers((prevAnswers) =>
-                prevAnswers.map((a) =>
-                    a.id === answers.id ? { ...answers, likes: answers.likes } : a
-                )
-            );
+            setAnswers((prevAnswers) => {
+                const updatedAnswers = prevAnswers.map((a) =>
+                    a.id === answers.id
+                        ? {
+                              ...a,
+                              likes: answers.likes,
+                              is_validated: answers.is_validated,
+                          }
+                        : a
+                );
+
+                const sortAnswers = [...updatedAnswers].sort(
+                    (a, b) => b.likes.length - a.likes.length
+                );
+                return sortAnswers;
+            });
         };
 
-        channel.listen('AnswerLiked', listener);
+        channel.listen("AnswerLiked", listener);
 
         return () => {
             channel.stopListening("AnswerLiked", listener);
-        }
+        };
     }, []);
 
     const formatDate = (dateString) => {
@@ -57,12 +68,16 @@ export default function DetailQuestion({
         post(`/jawaban/${answerId}/like`);
     };
 
+    const handleValidate = (answerId) => {
+        post(`/jawaban/${answerId}/validate`);
+    };
+
     const userHasLiked = (likes) => {
         const userLiked = likes.some((like) => like.user_id == auth.user.id);
         return userLiked;
     };
 
-    console.log(jawabans);
+    const isUserQuestion = pertanyaan.user_id === auth.user.id;
 
     return (
         <DetailQuestionLayout
@@ -140,38 +155,90 @@ export default function DetailQuestion({
                     className="rounded-lg mx-12 my-8 h-auto py-4"
                     style={{ backgroundColor: "#02AF91" }}
                 >
-                    <div className="flex justify-between rounded-t-lg mx-6 p-2 px-3 border-x-2 border-t-2 border-black bg-white ">
+                    <div className="rounded-t-lg mx-6 p-2 px-3 border-x-2 border-t-2 border-black bg-white ">
                         <div className="">
-                            <div className="flex flex-row mx-1 my-4">
-                                <div className="grid content-center me-5">
-                                    <i class="fa-solid fa-user fa-2xl"></i>
-                                </div>
+                            <div className="flex justify-between">
+                                <div className="flex flex-row mx-1 my-4">
+                                    <div className="grid content-center me-5">
+                                        <i class="fa-solid fa-user fa-2xl"></i>
+                                    </div>
 
-                                <div className="flex flex-col">
-                                    <p className="font-extrabold">
-                                        {jawaban.user_name}
-                                    </p>
-                                    <div className="flex flex-row">
-                                        <div className="me-3">
-                                            <p>
-                                                {formatDate(jawaban.updated_at)}
-                                            </p>
-                                        </div>
-                                        <p>-</p>
-                                        <div className="ml-2">
-                                            <p>{jawaban.jurusan_name}</p>
+                                    <div className="flex flex-col">
+                                        <p className="font-extrabold">
+                                            {jawaban.user_name}
+                                        </p>
+                                        <div className="flex flex-row">
+                                            <div className="me-3">
+                                                <p>
+                                                    {formatDate(
+                                                        jawaban.updated_at
+                                                    )}
+                                                </p>
+                                            </div>
+                                            <p>-</p>
+                                            <div className="ml-2">
+                                                <p>{jawaban.jurusan_name}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                {isUserQuestion && (
+                                    <div
+                                        className="flex mx-1 my-4"
+                                        onClick={() =>
+                                            handleValidate(jawaban.id)
+                                        }
+                                    >
+                                        <div className="cursor-pointer">
+                                            <i
+                                                class="fa-regular fa-circle-check fa-xl"
+                                                style={{
+                                                    color: `${
+                                                        jawaban.is_validated
+                                                            ? "#e61919"
+                                                            : "#02AF91"
+                                                    }`,
+                                                }}
+                                            ></i>
+                                        </div>
+                                        <p
+                                            className={`ms-2 cursor-pointer ${
+                                                jawaban.is_validated
+                                                    ? "text-red-500"
+                                                    : "text-green-500"
+                                            }`}
+                                        >
+                                            {`${
+                                                jawaban.is_validated
+                                                    ? "Batalkan Validasi"
+                                                    : "Validasi"
+                                            }`}
+                                        </p>
+                                    </div>
+                                )}
+
+                                {!isUserQuestion && jawaban.is_validated && (
+                                    <div className="flex mx-1 my-4">
+                                        <div className="">
+                                            <i
+                                                class="fa-regular fa-circle-check fa-xl"
+                                                style={{ color: "#02AF91" }}
+                                            ></i>
+                                        </div>
+                                        <p
+                                            className="ms-2"
+                                            style={{ color: "#02AF91" }}
+                                        >
+                                            Jawaban Valid
+                                        </p>
+                                    </div>
+                                )}
                             </div>
                             <div className="font-bold m-2">
                                 <div className="my-4">
                                     {jawaban.deskripsi_jawaban}
                                 </div>
                             </div>
-                        </div>
-                        <div className="p-2">
-                            <i class="fa-regular fa-heart fa-lg"></i>
                         </div>
                     </div>
 

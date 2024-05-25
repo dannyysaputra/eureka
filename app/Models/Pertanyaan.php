@@ -17,6 +17,9 @@ class Pertanyaan extends Model
         'id'
     ];
 
+    protected $casts = [
+        'is_answered' => 'boolean',
+    ];
 
     public function mataKuliah(): BelongsTo
     {
