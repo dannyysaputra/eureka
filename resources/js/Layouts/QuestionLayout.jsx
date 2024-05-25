@@ -5,16 +5,15 @@ import { Link } from "@inertiajs/react";
 
 export default function QuestionLayout({
     user,
-    pertanyaans,
     photoPath,
     children,
     topCourses,
+    topQuestions,
+    handleFilterByMatkul,
 }) {
-    const sortedPertanyaanByLikes = [...pertanyaans].sort(
+    const sortedPertanyaanByLikes = [...topQuestions].sort(
         (a, b) => b.likes.length - a.likes.length
     );
-
-    console.log(topCourses);
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
@@ -27,6 +26,8 @@ export default function QuestionLayout({
         height: "90px",
         color: "white",
     };
+
+    console.log(topCourses);
 
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -181,34 +182,50 @@ export default function QuestionLayout({
 
                 <div className=" float-right flex py-8 px-4">
                     <div className="flex flex-col rounded-xl relative w-60 h-auto bg-gray-300">
-                        <div className="text-xl font-extrabold text-center px-4 pt-4">
-                            Top Questions
-                        </div>
-                        <div className="flex flex-col rounded-xl justify-center px-2 m-4 w-auto h-auto bg-white">
-                            {sortedPertanyaanByLikes
-                                .slice(0, 3)
-                                .map((pertanyaan) => (
-                                    <div className="underline underline-offset-4 mx-2 my-4">
-                                        <p>{pertanyaan.deskripsi}</p>
-                                    </div>
-                                ))}
-                        </div>
-                        <div className="text-xl font-extrabold text-center p-4">
-                            Popular Tags
+                        <div>
+                            <div className="text-xl font-extrabold text-center px-4 pt-4">
+                                Top Questions
+                            </div>
+                            <div className="flex flex-col rounded-xl justify-center px-2 m-4 w-auto h-auto bg-white">
+                                {sortedPertanyaanByLikes
+                                    .slice(0, 3)
+                                    .map((pertanyaan) => (
+                                        <>
+                                            <Link
+                                                href={`/detail-pertanyaan/${pertanyaan.id}`}
+                                            >
+                                                <div className="underline underline-offset-4 mx-2 my-4">
+                                                    <p>
+                                                        {pertanyaan.deskripsi}
+                                                    </p>
+                                                </div>
+                                            </Link>
+                                        </>
+                                    ))}
+                            </div>
                         </div>
                         <div>
-                            {topCourses.map((courses) => (
-                                <div className="flex flex-row p-1 m-4">
-                                    <div className="rounded-xl border-4 border-gray-400 justify-center px-2 py-1 w-auto h-auto bg-white">
-                                        <div>
-                                            <p>{courses.matkul_name}</p>
+                            <div className="text-xl font-extrabold text-center p-4">
+                                Popular Tags
+                            </div>
+                            <div>
+                                {topCourses.map((course) => (
+                                    <div
+                                        className="flex flex-row p-1 m-4 cursor-pointer"
+                                        key={course.matkul_id}
+                                        onClick={() => handleFilterByMatkul(course.matkul_id)}
+                                    >
+                                        <div className="rounded-xl border-4 border-gray-400 justify-center px-2 py-1 w-auto h-auto bg-white hover:border-gray-600">
+                                            <div>
+                                                <p>{course.matkul_name}</p>
+                                            </div>
+                                        </div>
+                                        <div className="absolute right-0 p-2">
+                                            {course.total_questions}
                                         </div>
                                     </div>
-                                    <div className="absolute right-0 p-2">
-                                        {courses.total_questions}
-                                    </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>

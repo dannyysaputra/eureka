@@ -62,6 +62,8 @@ export default function DetailQuestion({
         return userLiked;
     };
 
+    console.log(jawabans);
+
     return (
         <DetailQuestionLayout
             user={auth.user}

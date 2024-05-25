@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Events\QuestionLiked;
 use App\Models\Jawaban;
-use App\Models\Jurusan;
 use App\Models\MataKuliah;
 use App\Models\Pertanyaan;
 use Carbon\Carbon;
-use Faker\Core\Uuid;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,15 +17,22 @@ use Inertia\Response;
 
 class QuestionController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $search = $request->input('search', '');
+
         $pertanyaans = Pertanyaan::with(['likes' => function ($query) {
             $query->select('likeable_id', 'user_id');
-        }])->join('users', 'pertanyaans.user_id', '=', 'users.id')
-        ->join('mata_kuliahs', 'pertanyaans.matkul_id', '=', 'mata_kuliahs.id')
-        ->select('pertanyaans.*', DB::raw("SUBSTRING_INDEX(users.name, ' ', 1) as nama_depan"), 'mata_kuliahs.nama_matkul as matkul_name')
+        }, 'mataKuliah'])
+        ->withCount('jawabans')
+        ->when($search, function ($query, $search) {
+            return $query->where('pertanyaans.judul', 'like', "%{$search}%")
+                ->orWhere('pertanyaans.deskripsi', 'like', "%{$search}%");
+                // ->orWhere('pertanyaans.mata_kuliah', 'like', "%{$search}%");
+        })
+        ->with('mataKuliah')
         ->get()
-        ->map(function ($pertanyaan) {
+        ->map(function ($pertanyaan) {  
             $deskripsi = Str::limit(strip_tags($pertanyaan->deskripsi), 100); // Hanya ambil 100 karakter
 
             // Hitung waktu yang sudah berlalu
@@ -35,26 +40,42 @@ class QuestionController extends Controller
             $daysAgo = $createdAt->floatDiffInDays(); // Selisih hari    
             $timeAgo = $daysAgo < 30 ? round($daysAgo) . ' days ago' : $createdAt->diffForHumans(); // Format "x days ago" atau "x months ago"
 
+            $namaDepan = explode(' ', $pertanyaan->user->name)[0];
+
             return array_merge($pertanyaan->toArray(), [
                 'deskripsi' => $deskripsi,
                 'timeAgo' => $timeAgo,
+                'nama_depan' => $namaDepan,
+            ]);
+        });
+
+        $topQuestions = Pertanyaan::with(['likes' => function ($query) {
+            $query->select('likeable_id', 'user_id');
+        }])
+        ->select('pertanyaans.*')
+        ->get()
+        ->map(function ($topQuestion) {
+            $deskripsi = Str::limit(strip_tags($topQuestion->deskripsi), 100);
+            return array_merge($topQuestion->toArray(), [
+                'deskripsi' => $deskripsi,
             ]);
         });
 
         $topCourses = DB::table('pertanyaans')
-        ->join('mata_kuliahs', 'pertanyaans.matkul_id', '=', 'mata_kuliahs.id')
-        ->select('pertanyaans.matkul_id', 'mata_kuliahs.nama_matkul as matkul_name', DB::raw('count(*) as total_questions'))
-        ->groupBy('pertanyaans.matkul_id', 'mata_kuliahs.nama_matkul') 
-        ->orderByDesc('total_questions')
-        ->limit(5)
-        ->get();
+            ->join('mata_kuliahs', 'pertanyaans.matkul_id', '=', 'mata_kuliahs.id')
+            ->select('pertanyaans.matkul_id', 'mata_kuliahs.nama_matkul as matkul_name', DB::raw('count(*) as total_questions'))
+            ->groupBy('pertanyaans.matkul_id', 'mata_kuliahs.nama_matkul') 
+            ->orderByDesc('total_questions')
+            ->limit(5)
+            ->get();
         
 
         $photoPath = '/images/nav-bg.png';
         return Inertia::render('Question', [
             'photoPath' => $photoPath,
             'pertanyaans' => $pertanyaans,
-            'topCourses' => $topCourses
+            'topCourses' => $topCourses,
+            'topQuestions' => $topQuestions
         ]);
     }
 
@@ -240,6 +261,18 @@ class QuestionController extends Controller
             ->limit(5)
             ->get();
 
+        $topQuestions = Pertanyaan::with(['likes' => function ($query) {
+                $query->select('likeable_id', 'user_id');
+            }])
+            ->select('pertanyaans.*')
+            ->get()
+            ->map(function ($topQuestion) {
+                $deskripsi = Str::limit(strip_tags($topQuestion->deskripsi), 100);
+                return array_merge($topQuestion->toArray(), [
+                    'deskripsi' => $deskripsi,
+                ]);
+            });
+
         $photoPath = '/images/nav-bg.png';
 
         $user = Auth::user();
@@ -250,6 +283,7 @@ class QuestionController extends Controller
         return Inertia::render('AskQuestion', [
             'pertanyaans' => $pertanyaans,
             'topCourses' => $topCourses,
+            'topQuestions' => $topQuestions,
             'photoPath' => $photoPath,
             'mataKuliahs' => $mataKuliahs
         ]);
