@@ -15,6 +15,10 @@ class Jawaban extends Model
         'id'
     ];
 
+    protected $casts = [
+        'is_validated' => 'boolean',
+    ];  
+
     public function pertanyaan(): BelongsTo
     {
         return $this->belongsTo(Pertanyaan::class);

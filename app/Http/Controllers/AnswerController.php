@@ -44,4 +44,26 @@ class AnswerController extends Controller
 
         AnswerLiked::dispatch($jawaban);
     }
+
+    public function validateAnswer($id)
+    {
+        $jawaban = Jawaban::findOrFail($id);
+
+        if ($jawaban->is_validated) {
+            $jawaban->is_validated = false;
+        } else {
+            $jawaban->is_validated = true;
+        }
+        $jawaban->save();
+
+        $pertanyaan = $jawaban->pertanyaan;
+        if (!$pertanyaan->jawabans()->where('is_validated', true)->exists()) {
+            $pertanyaan->is_answered = false;
+        } else {
+            $pertanyaan->is_answered = true;
+        }
+        $pertanyaan->save();
+        
+        return redirect()->back()->with('success', 'Jawaban berhasil divalidasi.');
+    }
 }
