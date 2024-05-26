@@ -3,7 +3,12 @@ import EurekaLogo from "@/Components/EurekaLogo";
 import Dropdown from "@/Components/Dropdown";
 import { Link } from "@inertiajs/react";
 
-export default function DetailQuestionLayout({ user, header, photoPath, children }) {
+export default function DetailQuestionLayout({
+    user,
+    header,
+    photoPath,
+    children,
+}) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
 
@@ -85,81 +90,88 @@ export default function DetailQuestionLayout({ user, header, photoPath, children
                 <div className="float-start flex-none w-60 h-auto">
                     <div className="">
                         <div className="flex flex-col h-auto pt-10 px-7">
-                            <div className="flex flex-row">
-                                <img
-                                    style={{
-                                        height: "40px",
-                                        width: "40px",
-                                    }}
-                                    className=""
-                                    src="/images/home-icon.png"
-                                    alt="Hero"
-                                />
-                                <div className="font-bold text-xl my-2">
-                                    Beranda
+                            <Link href="/">
+                                <div className="flex flex-row my-2">
+                                    <div>
+                                        <i class="fa-solid fa-house fa-xl"></i>
+                                    </div>
+                                    <div className="font-bold text-xl ms-2">
+                                        Beranda
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="flex flex-row">
-                                <img
-                                    style={{
-                                        height: "40px",
-                                        width: "40px",
-                                    }}
-                                    className=""
-                                    src="/images/star-icon.png"
-                                    alt="Hero"
-                                />
-                                <div className="font-bold text-xl my-3">
+                            </Link>
+                            <div className="flex flex-row my-2">
+                                <div>
+                                    <i class="fa-regular fa-star fa-xl"></i>
+                                </div>
+                                <div className="font-bold text-xl ms-2">
                                     Koleksi
                                 </div>
                             </div>
-                            <div className="flex flex-row">
-                                <img
-                                    style={{
-                                        height: "40px",
-                                        width: "40px",
-                                    }}
-                                    className=""
-                                    src="/images/profile.png"
-                                    alt="Hero"
-                                />
-                                <div className="font-bold text-xl my-3">
+                            <div className="flex flex-row my-2 ms-1">
+                                <div>
+                                    <i class="fa-solid fa-user fa-xl"></i>
+                                </div>
+                                <div className="font-bold text-xl ms-3">
                                     Profil
                                 </div>
                             </div>
-                            <div className="flex flex-row">
-                                <img
-                                    style={{
-                                        height: "40px",
-                                        width: "40px",
-                                    }}
-                                    src="/images/wpf_ask-question.png"
-                                    alt="Hero"
-                                />
-                                <div className="font-bold text-xl">
-                                    Ajukan Pertanyaan
+                            <Link href="/ajukan-pertanyaan">
+                                <div className="flex flex-row my-2">
+                                    <div>
+                                        <i class="fa-regular fa-circle-question fa-xl"></i>
+                                    </div>
+                                    <div className="font-bold text-xl ms-3">
+                                        Ajukan Pertanyaan
+                                    </div>
                                 </div>
-                            </div>
+                            </Link>
+                            <Link href="/leaderboard">
+                                <div className="flex flex-row my-2">
+                                    <div>
+                                        <i class="fa-solid fa-chart-simple fa-xl"></i>
+                                    </div>
+                                    <div className="font-bold text-xl ms-3">
+                                        Leaderboard
+                                    </div>
+                                </div>
+                            </Link>
                         </div>
 
-                        <div className="flex flex-col-reverse h-auto place-items-center mt-60">
-                            <div
-                                className="flex rounded-lg w-44 h-10 mb-6 justify-center"
-                                style={{ backgroundColor: "#02AF91" }}
-                            >
-                                <div className="font-bold text-xl my-3 place-content-center">
-                                    Sign Up
+                        {!user ? (
+                            <div className="flex flex-col-reverse h-auto place-items-center mt-60">
+                                <div
+                                    className="flex rounded-lg w-44 h-10 mb-6 justify-center"
+                                    style={{ backgroundColor: "#02AF91" }}
+                                >
+                                    <div className="font-bold text-xl my-3 place-content-center">
+                                        Sign Up
+                                    </div>
+                                </div>
+                                <div
+                                    className="flex rounded-lg w-44 h-10 mb-2 justify-center"
+                                    style={{ backgroundColor: "#02AF91" }}
+                                >
+                                    <div className="font-bold text-xl my-3 place-content-center">
+                                        Login
+                                    </div>
                                 </div>
                             </div>
-                            <div
-                                className="flex rounded-lg w-44 h-10 mb-2 justify-center"
-                                style={{ backgroundColor: "#02AF91" }}
-                            >
-                                <div className="font-bold text-xl my-3 place-content-center">
-                                    Login
-                                </div>
+                        ) : (
+                            <div className="flex flex-col-reverse h-auto place-items-center mt-60">
+                                <Link
+                                    href={route("logout")}
+                                    method="post"
+                                    as="button"
+                                >
+                                    <div className="flex rounded-lg w-44 h-10 mb-6 justify-center bg-red-500">
+                                        <div className="font-bold text-xl my-auto place-content-center">
+                                            Keluar
+                                        </div>
+                                    </div>
+                                </Link>
                             </div>
-                        </div>
+                        )}
                     </div>
                 </div>
                 <div className="fixed"></div>

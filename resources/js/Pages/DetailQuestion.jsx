@@ -3,7 +3,8 @@ import { format } from "date-fns";
 import PrimaryButton from "@/Components/PrimaryButton";
 import RichTextEditor from "@/Components/RichTextEditor";
 import { useEffect, useState } from "react";
-import { Head, useForm } from "@inertiajs/react";
+import ArrowButton from "@/Components/ArrowButton";
+import { Head, useForm, Link } from "@inertiajs/react";
 
 export default function DetailQuestion({
     auth,
@@ -59,8 +60,6 @@ export default function DetailQuestion({
     const submit = (e) => {
         e.preventDefault();
 
-        console.log(data);
-
         post(route("submit-jawaban"));
     };
 
@@ -77,6 +76,8 @@ export default function DetailQuestion({
         return userLiked;
     };
 
+    console.log(jawabans);
+
     const isUserQuestion = pertanyaan.user_id === auth.user.id;
 
     return (
@@ -90,6 +91,11 @@ export default function DetailQuestion({
             photoPath={photoPath}
         >
             <Head title={pertanyaan.judul} />
+            <div className="my-6 mx-10">
+                <Link href={route("pertanyaan")} className="my-auto">
+                    <ArrowButton fillColor={"#02AF91"}></ArrowButton>
+                </Link>
+            </div>
             <div
                 className="rounded-lg mx-12 my-8 h-auto"
                 style={{ backgroundColor: "#02AF91" }}

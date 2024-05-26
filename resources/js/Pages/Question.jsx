@@ -260,7 +260,7 @@ export default function Question({
                                     src="/images/view.png"
                                     alt=""
                                 />
-                                <div className="mx-1">2</div>
+                                <div className="mx-1">{pertanyaan.insight}</div>
                                 <div className="">Lihat</div>
                             </div>
                         </div>

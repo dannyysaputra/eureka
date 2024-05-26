@@ -51,7 +51,7 @@ export default function Register({ photoPath, backgroundPath, jurusans }) {
                 <div className="flex-auto w-32">
                     <div className="flex justify-between mx-3">
                         <Link href={route("welcome")} className="my-auto">
-                            <ArrowButton></ArrowButton>
+                            <ArrowButton fillColor={'white'}></ArrowButton>
                         </Link>
                         <img src="/images/saintek.png" alt="" />
                     </div>

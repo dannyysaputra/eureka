@@ -2,8 +2,9 @@ import QuestionLayout from "@/Layouts/QuestionLayout";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import InputError from "@/Components/InputError";
+import ArrowButton from "@/Components/ArrowButton";
 import RichTextEditor from "@/Components/RichTextEditor";
-import { Head, useForm } from "@inertiajs/react";
+import { Head, useForm, Link } from "@inertiajs/react";
 import { useState } from "react";
 
 export default function AskQuestion({
@@ -62,6 +63,11 @@ export default function AskQuestion({
             <Head title="Ajukan Pertanyaan" />
 
             <div className="mt-12">
+                <div className="mb-4">
+                    <Link href={route("pertanyaan")} className="my-auto">
+                        <ArrowButton fillColor={'#02AF91'}></ArrowButton>
+                    </Link>
+                </div>
                 <h1 className="font-black text-2xl">Ajukan Pertanyaan</h1>
                 <form onSubmit={submit}>
                     <div className="flex gap-5 mt-4">
