@@ -92,10 +92,25 @@ export default function Question({
             return 0;
         });
 
-    // console.log(questions);
+    console.log(questions);
 
     const handleLike = (questionId) => {
         post(`/pertanyaan/${questionId}/like`);
+    };
+
+    const handleBookmark = (questionId) => {
+        post(`/pertanyaan/${questionId}/add-collection`);
+    };
+
+    const handleUnbookmark = (questionId) => {
+        post(`/pertanyaan/${questionId}/remove-collection`);
+    };
+
+    const userHasBookmarked = (bookmaks) => {
+        const userBookmark = bookmaks.some(
+            (bookmak) => bookmak.id == auth.user.id
+        );
+        return userBookmark;
     };
 
     const userHasLiked = (likes) => {
@@ -203,24 +218,28 @@ export default function Question({
                                 {pertanyaan.deskripsi}
                             </div>
                         </Link>
-                        <div className="flex justify-evenly">
+                        <div className="flex justify-around">
                             <div className="flex">
-                                <img
-                                    style={{
-                                        height: "25px",
-                                        width: "25px",
-                                    }}
-                                    src="/images/refresh.png"
-                                    alt=""
-                                />
-                                <div className="font-bold mb-8">
-                                    {pertanyaan.nama_depan}
+                                <div className="flex">
+                                    <img
+                                        style={{
+                                            height: "25px",
+                                            width: "25px",
+                                        }}
+                                        src="/images/refresh.png"
+                                        alt=""
+                                    />
+                                    <div className="font-bold mb-8">
+                                        {pertanyaan.nama_depan}
+                                    </div>
+                                </div>
+                                <div className="ms-2">-</div>
+                                <div className="mx-2">
+                                    Ask {pertanyaan.timeAgo}
                                 </div>
                             </div>
-                            <div className="mx-1">-</div>
-                            <div className="mx-2">Ask {pertanyaan.timeAgo}</div>
                             <div
-                                className="flex flex-row mr-4"
+                                className="flex flex-row"
                                 onClick={() => handleLike(pertanyaan.id)}
                             >
                                 <div>
@@ -235,9 +254,8 @@ export default function Question({
                                 <div className="mx-1">
                                     {pertanyaan.likes.length}
                                 </div>
-                                <div className="">Likes</div>
                             </div>
-                            <div className="flex flex-row mr-4">
+                            <div className="flex flex-row">
                                 <img
                                     style={{
                                         height: "25px",
@@ -249,7 +267,6 @@ export default function Question({
                                 <div className="mx-1">
                                     {pertanyaan.jawabans_count}
                                 </div>
-                                <div className="">Jawaban</div>
                             </div>
                             <div className="flex flex-row ">
                                 <img
@@ -261,8 +278,30 @@ export default function Question({
                                     alt=""
                                 />
                                 <div className="mx-1">{pertanyaan.insight}</div>
-                                <div className="">Lihat</div>
                             </div>
+                            {userHasBookmarked(pertanyaan.collected_by) ? (
+                                <div
+                                    className="flex"
+                                    onClick={() =>
+                                        handleUnbookmark(pertanyaan.id)
+                                    }
+                                >
+                                    <div>
+                                        <i class="fa-solid fa-bookmark fa-lg"></i>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div
+                                    className="flex"
+                                    onClick={() =>
+                                        handleBookmark(pertanyaan.id)
+                                    }
+                                >
+                                    <div>
+                                        <i class="fa-regular fa-bookmark fa-lg"></i>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

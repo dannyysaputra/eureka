@@ -98,4 +98,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Jawaban::class);
     }
+
+    public function collections()
+    {
+        return $this->belongsToMany(Pertanyaan::class, 'collections');
+    }
 }

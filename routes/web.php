@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuestionController;
@@ -19,13 +20,6 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 })->name('welcome');
-
-
-
-Route::get('/collection', function () {
-        $photoPath = '/images/nav-bg.png';
-        return Inertia::render('Collection', ['photoPath' => $photoPath]);
-    })->name('collection');
     
 Route::middleware('auth')->group(function () {
     Route::get('/ajukan-pertanyaan', [QuestionController::class, 'askQuestion'])->name('ajukan-pertanyaan');
@@ -50,6 +44,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        
+    Route::get('/koleksi', [CollectionController::class, 'index'])->name('koleksi');
+    Route::post('/pertanyaan/{id}/add-collection', [CollectionController::class, 'addCollection']);
+    Route::post('/pertanyaan/{id}/remove-collection', [CollectionController::class, 'removeCollection']);
 });
 
 require __DIR__.'/auth.php';
