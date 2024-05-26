@@ -23,14 +23,12 @@ class QuestionController extends Controller
 
         $pertanyaans = Pertanyaan::with(['likes' => function ($query) {
             $query->select('likeable_id', 'user_id');
-        }, 'mataKuliah'])
+        }, 'mataKuliah', 'collectedBy'])
         ->withCount('jawabans')
         ->when($search, function ($query, $search) {
             return $query->where('pertanyaans.judul', 'like', "%{$search}%")
                 ->orWhere('pertanyaans.deskripsi', 'like', "%{$search}%");
-                // ->orWhere('pertanyaans.mata_kuliah', 'like', "%{$search}%");
         })
-        ->with('mataKuliah')
         ->get()
         ->map(function ($pertanyaan) {  
             $deskripsi = Str::limit(strip_tags($pertanyaan->deskripsi), 100); // Hanya ambil 100 karakter

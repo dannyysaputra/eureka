@@ -35,4 +35,9 @@ class Pertanyaan extends Model
     {
         return $this->hasMany(Jawaban::class);
     }
+
+    public function collectedBy()
+    {
+        return $this->belongsToMany(User::class, 'collections', 'pertanyaan_id', 'user_id');
+    }
 }
