@@ -14,7 +14,8 @@ class UserObserver
      */
     public function saving(User $user)
     {
-        $user->level = $this->calculateLevel($user->points);
+        $user->rank = $this->calculateRank($user->points);
+        // $this->setRankPosition($user);
     }
 
     /**
@@ -23,7 +24,7 @@ class UserObserver
      * @param  int  $points
      * @return string
      */
-    private function calculateLevel($points)
+    private function calculateRank($points)
     {
         if ($points >= 675) {
             return 'Sang Sepuh';
@@ -41,6 +42,20 @@ class UserObserver
             return 'Pemula';
         }
     }
+
+    // public function setRankPosition(User $user)
+    // {
+    //     $users = User::orderByDesc('points')->get();
+
+    //     foreach ($users as $index => $currentUser) {
+    //         if ($currentUser->id === $user->id) {
+    //             $user->rank_position = $index + 1;
+    //             break;  
+    //         }
+    //     }
+
+    //     $user->save();
+    // }
 
     /**
      * Handle the User "updated" event.

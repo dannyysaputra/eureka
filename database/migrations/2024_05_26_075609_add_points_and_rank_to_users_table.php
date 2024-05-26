@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->integer('points')->default(0);
-            $table->string('level')->default('Pemula');
+            $table->string('rank')->default('Pemula')->after('points');
         });
     }
 
@@ -23,7 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->dropColumn('points');
+            $table->dropColumn('rank');
         });
     }
 };
