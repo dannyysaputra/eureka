@@ -98,6 +98,8 @@ class QuestionController extends Controller
             'created_at' => now()
         ]);
 
+        $user->addPoints(5);
+
         $pertanyaan->save();
         
         return redirect(route('pertanyaan', absolute: false));
@@ -139,6 +141,8 @@ class QuestionController extends Controller
             ->join('jurusans', 'users.jurusan_id', '=', 'jurusans.id')
             ->select('pertanyaans.*', 'users.name as user_name', 'jurusans.nama_jurusan as jurusan_name')
             ->first();
+
+        $pertanyaan->increment('insight');
 
         $pertanyaan->deskripsi = strip_tags($pertanyaan->deskripsi);
 

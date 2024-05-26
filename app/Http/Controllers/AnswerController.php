@@ -25,6 +25,8 @@ class AnswerController extends Controller
             'user_id' => $user->id
         ]);
 
+        $user->addPoints(10);
+
         $jawaban->save();
 
         return redirect(route('pertanyaan', absolute: false));
@@ -54,6 +56,10 @@ class AnswerController extends Controller
         } else {
             $jawaban->is_validated = true;
         }
+
+        $user = $jawaban->user;
+        $user->addPoints(25);
+        
         $jawaban->save();
 
         $pertanyaan = $jawaban->pertanyaan;

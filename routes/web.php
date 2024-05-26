@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuestionController;
 use Illuminate\Foundation\Application;
@@ -43,6 +44,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/pertanyaan/{id}/like', [QuestionController::class, 'likePost'])->name('like');
 
     Route::get('/pertanyaan-saya', [QuestionController::class, 'myQuestion'])->name('pertanyaan-saya');
+
+    Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

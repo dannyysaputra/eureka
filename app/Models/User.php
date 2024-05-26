@@ -54,6 +54,11 @@ class User extends Authenticatable
         ];
     }
 
+    public function addPoints($points) {
+        $this->points += $points;
+        $this->save();
+    }
+
     public function jurusan(): BelongsTo
     {
         return $this->belongsTo(Jurusan::class);
