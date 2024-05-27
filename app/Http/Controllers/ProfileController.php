@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Jawaban;
+use App\Models\Jurusan;
+use App\Models\Pertanyaan;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,6 +16,29 @@ use Inertia\Response;
 
 class ProfileController extends Controller
 {
+    public function index()
+    {
+        $user = Auth::user();
+        $jurusan = Jurusan::find($user->jurusan_id);
+        // $pertanyaans = Pertanyaan::where('user_id', $user->id)->get()->toArray();
+        // $pertanyaans = $user->pertanyaan;
+        // $jawabans = Jawaban::where('user_id', $user->id)->get();
+        $user->pertanyaan;
+        $user->jawabans;
+
+        // dd($user);
+
+        $photoPath = '/images/nav-bg.png';
+
+        return Inertia::render('Profile', [
+            // 'pertanyaans', $pertanyaans,
+            // 'jawabans', $jawabans,
+            'user' => $user,
+            'jurusan' => $jurusan,
+            'photoPath' => $photoPath,
+        ]);
+    }
+    
     /**
      * Display the user's profile form.
      */
