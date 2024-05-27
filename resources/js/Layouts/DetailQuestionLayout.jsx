@@ -56,7 +56,7 @@ export default function DetailQuestionLayout({
                                 </Dropdown.Trigger>
 
                                 <Dropdown.Content>
-                                    <Dropdown.Link href={route("profile.edit")}>
+                                    <Dropdown.Link href={route("profile")}>
                                         Profile
                                     </Dropdown.Link>
                                     <Dropdown.Link
@@ -108,14 +108,16 @@ export default function DetailQuestionLayout({
                                     Koleksi
                                 </div>
                             </div>
-                            <div className="flex flex-row my-2 ms-1">
-                                <div>
-                                    <i class="fa-solid fa-user fa-xl"></i>
+                            <Link href="/profile">
+                                <div className="flex flex-row my-2 ms-1">
+                                    <div>
+                                        <i class="fa-solid fa-user fa-xl"></i>
+                                    </div>
+                                    <div className="font-bold text-xl ms-3">
+                                        Profil
+                                    </div>
                                 </div>
-                                <div className="font-bold text-xl ms-3">
-                                    Profil
-                                </div>
-                            </div>
+                            </Link>
                             <Link href="/ajukan-pertanyaan">
                                 <div className="flex flex-row my-2">
                                     <div>

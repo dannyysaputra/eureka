@@ -14,7 +14,7 @@ use Illuminate\Queue\SerializesModels;
 class AnswerLiked implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
+    
     public $answers;
 
     /**

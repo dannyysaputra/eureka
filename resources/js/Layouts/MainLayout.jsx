@@ -67,7 +67,7 @@ export default function MainLayout({ user, header, photoPath, children }) {
                                 </Dropdown.Trigger>
 
                                 <Dropdown.Content>
-                                    <Dropdown.Link href={route("profile.edit")}>
+                                    <Dropdown.Link href={route("profile")}>
                                         Profile
                                     </Dropdown.Link>
                                     <Dropdown.Link
