@@ -111,7 +111,7 @@ export default function MyQuestion({ auth, photoPath, pertanyaans }) {
                                 </div>
                             </div>
                             <div className="mx-1">-</div>
-                            <div className="mx-2">Ask {pertanyaan.timeAgo}</div>
+                            <div className="mx-2">Bertanya {pertanyaan.timeAgo}</div>
                             <div
                                 className="flex flex-row mr-4"
                                 onClick={() => handleLike(pertanyaan.id)}

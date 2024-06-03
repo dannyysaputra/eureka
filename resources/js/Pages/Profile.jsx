@@ -3,16 +3,7 @@ import { format } from "date-fns";
 import { useState } from "react";
 import { Head, Link } from "@inertiajs/react";
 
-export default function Profile({
-    auth,
-    photoPath,
-    jurusan,
-    pertanyaans,
-    jawabans,
-    user,
-}) {
-    console.log(user);
-    console.log(user.jawabans.length);
+export default function Profile({ photoPath, jurusan, user }) {
     const formatDate = (dateString) => {
         return format(new Date(dateString), "dd/MM/yyyy");
     };
@@ -61,12 +52,14 @@ export default function Profile({
                     </div>
                 </div>
                 <div className="me-4">
-                    <button
-                        className="rounded p-2 font-bold text-sm mb-4"
-                        style={{ backgroundColor: "#02AF91" }}
-                    >
-                        Edit Profil
-                    </button>
+                    <Link href="/edit-profile">
+                        <div
+                            className="rounded p-2 font-bold text-sm mb-4"
+                            style={{ backgroundColor: "#02AF91" }}
+                        >
+                            Edit Profil
+                        </div>
+                    </Link>
                     <div
                         className="rounded-full pt-8 py-5 font-bold text-3xl"
                         style={{ backgroundColor: "#02AF91" }}
@@ -170,7 +163,9 @@ export default function Profile({
 
                 {switchAnswer &&
                     user.jawabans.map((jawaban) => (
-                        <Link href={`/detail-pertanyaan/${jawaban.pertanyaan_id}`}>
+                        <Link
+                            href={`/detail-pertanyaan/${jawaban.pertanyaan_id}`}
+                        >
                             <div className="mb-10 border-4 mx-8 border-black rounded-md">
                                 <div
                                     className="p-4"

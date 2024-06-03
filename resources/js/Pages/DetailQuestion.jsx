@@ -135,25 +135,30 @@ export default function DetailQuestion({
                         Komentar
                     </div>
                 </div>
-                <form onSubmit={submit}>
-                    <div
-                        className="flex flex-col"
-                        style={{ backgroundColor: "#F3F4F6" }}
-                    >
-                        <div className="mt-5 h-auto flex-grow">
-                            <RichTextEditor
-                                name="deskripsiJawaban"
-                                value={data.deskripsiJawaban}
-                                onChange={(content) =>
-                                    setData("deskripsiJawaban", content)
-                                }
-                            />
+                {!(pertanyaan.user_id == auth.user.id) && (
+                    <form onSubmit={submit}>
+                        <div
+                            className="flex flex-col"
+                            style={{ backgroundColor: "#F3F4F6" }}
+                        >
+                            <div className="mt-5 h-auto flex-grow">
+                                <RichTextEditor
+                                    name="deskripsiJawaban"
+                                    value={data.deskripsiJawaban}
+                                    onChange={(content) =>
+                                        setData("deskripsiJawaban", content)
+                                    }
+                                />
+                            </div>
+                            <PrimaryButton
+                                disabled={processing}
+                                className="mt-5"
+                            >
+                                Submit
+                            </PrimaryButton>
                         </div>
-                        <PrimaryButton disabled={processing} className="mt-5">
-                            Submit
-                        </PrimaryButton>
-                    </div>
-                </form>
+                    </form>
+                )}
             </div>
 
             {answers.map((jawaban) => (

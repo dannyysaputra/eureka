@@ -36,7 +36,7 @@ class QuestionController extends Controller
             // Hitung waktu yang sudah berlalu
             $createdAt = Carbon::parse($pertanyaan->created_at);
             $daysAgo = $createdAt->floatDiffInDays(); // Selisih hari    
-            $timeAgo = $daysAgo < 30 ? round($daysAgo) . ' days ago' : $createdAt->diffForHumans(); // Format "x days ago" atau "x months ago"
+            $timeAgo = $daysAgo < 30 ? round($daysAgo) . ' hari yang lalu' : $createdAt->diffForHumans(); // Format "x hari yang lalu" atau "x months ago"
 
             $namaDepan = explode(' ', $pertanyaan->user->name)[0];
 
@@ -179,7 +179,7 @@ class QuestionController extends Controller
                 // Hitung waktu yang sudah berlalu
                 $createdAt = Carbon::parse($pertanyaan->created_at);
                 $daysAgo = $createdAt->floatDiffInDays(); // Selisih hari    
-                $timeAgo = $daysAgo < 30 ? round($daysAgo) . ' days ago' : $createdAt->diffForHumans(); // Format "x days ago" atau "x months ago"
+                $timeAgo = $daysAgo < 30 ? round($daysAgo) . ' hari yang lalu' : $createdAt->diffForHumans(); // Format "x hari yang lalu" atau "x months ago"
     
                 return array_merge($pertanyaan->toArray(), [
                     'deskripsi' => $deskripsi,
