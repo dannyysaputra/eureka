@@ -100,14 +100,17 @@ export default function DetailQuestionLayout({
                                     </div>
                                 </div>
                             </Link>
-                            <div className="flex flex-row my-2">
-                                <div>
-                                    <i class="fa-regular fa-star fa-xl"></i>
+                            <Link href="/koleksi">
+                                <div className="flex flex-row my-2">
+                                    <div>
+                                        <i class="fa-regular fa-star fa-xl"></i>
+                                    </div>
+                                    <div className="font-bold text-xl ms-2">
+                                        Koleksi
+                                    </div>
                                 </div>
-                                <div className="font-bold text-xl ms-2">
-                                    Koleksi
-                                </div>
-                            </div>
+                            </Link>
+
                             <Link href="/profile">
                                 <div className="flex flex-row my-2 ms-1">
                                     <div>

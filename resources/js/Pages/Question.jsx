@@ -235,7 +235,7 @@ export default function Question({
                                 </div>
                                 <div className="ms-2">-</div>
                                 <div className="mx-2">
-                                    Ask {pertanyaan.timeAgo}
+                                    {pertanyaan.timeAgo}
                                 </div>
                             </div>
                             <div
