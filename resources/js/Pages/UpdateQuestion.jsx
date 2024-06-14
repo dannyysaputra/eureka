@@ -13,6 +13,7 @@ export default function UpdateQuestion({
     pertanyaan,
     pertanyaans,
     topCourses,
+    topQuestions
 }) {
     console.log(pertanyaan);
 
@@ -57,6 +58,7 @@ export default function UpdateQuestion({
             photoPath={photoPath}
             pertanyaans={pertanyaans}
             topCourses={topCourses}
+            topQuestions={topQuestions}
         >
             <Head title="Ubah Pertanyaan" />
 

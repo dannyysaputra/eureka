@@ -28,6 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/submit-jawaban', [AnswerController::class, 'store'])->name('submit-jawaban');
     Route::post('/jawaban/{id}/like', [AnswerController::class, 'likeAnswer'])->name('likeAnswer');
     Route::post('/jawaban/{id}/validate', [AnswerController::class, 'validateAnswer'])->name('likeAnswer');
+    Route::delete('/jawaban/{id}', [AnswerController::class, 'destroy'])->name('jawaban.destroy');
+    Route::put('/jawaban/{id}', [AnswerController::class, 'update'])->name('jawaban.update');
     
     Route::get('/pertanyaan', [QuestionController::class, 'index'])->name('pertanyaan');
     Route::get('/edit-pertanyaan/{id}', [QuestionController::class, 'updateView'])->name('pertanyaan.updateView');

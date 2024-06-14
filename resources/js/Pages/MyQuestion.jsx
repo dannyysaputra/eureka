@@ -1,9 +1,9 @@
 import { Head, Link, useForm, router } from "@inertiajs/react";
 import { Inertia } from "@inertiajs/inertia";
 import { useEffect, useState } from "react";
-import Modal from "react-modal";
 import "../echo";
 import DetailQuestionLayout from "@/Layouts/DetailQuestionLayout";
+import JawabanCard from "@/Components/JawabanCard";
 
 export default function MyQuestion({ auth, photoPath, pertanyaans }) {
     const [questions, setQuestions] = useState(pertanyaans || []);

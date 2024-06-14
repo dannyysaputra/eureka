@@ -29,7 +29,21 @@ class AnswerController extends Controller
 
         $jawaban->save();
 
-        return redirect(route('pertanyaan', absolute: false));
+        return redirect()->back();
+    }
+
+    public function update(Request $request, $id) : RedirectResponse
+    {
+        $jawaban = Jawaban::findOrFail($id);
+
+        $request->validate([
+            'deskripsiJawaban' => 'required',
+        ]);
+
+        $jawaban->deskripsi_jawaban = $request->deskripsiJawaban;
+        $jawaban->save();
+
+        return redirect()->back();
     }
 
     public function likeAnswer($id)
@@ -71,5 +85,13 @@ class AnswerController extends Controller
         $pertanyaan->save();
         
         return redirect()->back()->with('success', 'Jawaban berhasil divalidasi.');
+    }
+
+    public function destroy($id): RedirectResponse
+    {
+        $jawaban = Jawaban::findOrFail($id);
+        $jawaban->delete();
+
+        return redirect()->back();
     }
 }

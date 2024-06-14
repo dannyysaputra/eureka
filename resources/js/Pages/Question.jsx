@@ -106,9 +106,9 @@ export default function Question({
         post(`/pertanyaan/${questionId}/remove-collection`);
     };
 
-    const userHasBookmarked = (bookmaks) => {
-        const userBookmark = bookmaks.some(
-            (bookmak) => bookmak.id == auth.user.id
+    const userHasBookmarked = (bookmark) => {
+        const userBookmark = bookmark.some(
+            (bookmark) => bookmark.id == auth.user.id
         );
         return userBookmark;
     };
