@@ -2,9 +2,12 @@ import DetailQuestionLayout from "@/Layouts/DetailQuestionLayout";
 import { format } from "date-fns";
 import PrimaryButton from "@/Components/PrimaryButton";
 import RichTextEditor from "@/Components/RichTextEditor";
+import CustomConfirmDialog from "@/Components/DeleteConfirmation";
 import { useEffect, useState } from "react";
 import ArrowButton from "@/Components/ArrowButton";
 import { Head, useForm, Link } from "@inertiajs/react";
+import { Inertia } from "@inertiajs/inertia";
+import JawabanCard from "@/Components/JawabanCard";
 
 export default function DetailQuestion({
     auth,
@@ -57,14 +60,42 @@ export default function DetailQuestion({
         pertanyaanId: pertanyaan.id,
     });
 
+    const { data: updateData, setData: setUpdateData, put, processing: updateProcessing, errors: updateErrors, reset: resetUpdate } = useForm({
+        deskripsiJawaban: data.deskripsiJawaban,
+    });
+
     const submit = (e) => {
         e.preventDefault();
 
         post(route("submit-jawaban"));
     };
 
+    const handleDelete = async (id) => {
+        Inertia.delete(`/jawaban/${id}`);
+    };
+
+    const handleUpdate = (id, updatedContent) => {
+        setUpdateData("deskripsiJawaban", updatedContent);
+        put(route("jawaban.update", id), {
+            preserveScroll: true,
+            onSuccess: (response) => {
+                setAnswers(answers.map(answer => 
+                    answer.id === id ? { ...answer, deskripsi_jawaban: updatedContent } : answer
+                ));
+            },
+        });
+    };
+
     const handleLike = (answerId) => {
         post(`/jawaban/${answerId}/like`);
+    };
+
+    const handleBookmark = (questionId) => {
+        post(`/pertanyaan/${questionId}/add-collection`);
+    };
+
+    const handleUnbookmark = (questionId) => {
+        post(`/pertanyaan/${questionId}/remove-collection`);
     };
 
     const handleValidate = (answerId) => {
@@ -76,7 +107,12 @@ export default function DetailQuestion({
         return userLiked;
     };
 
-    console.log(jawabans);
+    const userHasBookmarked = (bookmarks) => {
+        const userBookmark = bookmarks.some(
+            (bookmark) => bookmark.id == auth.user.id
+        );
+        return userBookmark;
+    };
 
     const isUserQuestion = pertanyaan.user_id === auth.user.id;
 
@@ -127,10 +163,28 @@ export default function DetailQuestion({
                         </div>
                     </div>
                     <div className="p-2">
-                        <i class="fa-regular fa-bookmark fa-lg"></i>
+                        {userHasBookmarked(pertanyaan.collected_by) ? (
+                            <div
+                                className="flex"
+                                onClick={() => handleUnbookmark(pertanyaan.id)}
+                            >
+                                <div>
+                                    <i class="fa-solid fa-bookmark fa-lg"></i>
+                                </div>
+                            </div>
+                        ) : (
+                            <div
+                                className="flex"
+                                onClick={() => handleBookmark(pertanyaan.id)}
+                            >
+                                <div>
+                                    <i class="fa-regular fa-bookmark fa-lg"></i>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
-                <div className="rounded-b-lg py-1 mx-6 mb-4 border-2 border-black bg-gray-300">
+                <div className="rounded-b-lg py-1 mx-6 mb-5 border-2 border-black bg-gray-300">
                     <div className="flex justify-center font-extrabold">
                         Komentar
                     </div>
@@ -162,119 +216,20 @@ export default function DetailQuestion({
             </div>
 
             {answers.map((jawaban) => (
-                <div
-                    className="rounded-lg mx-12 my-8 h-auto py-4"
-                    style={{ backgroundColor: "#02AF91" }}
-                >
-                    <div className="rounded-t-lg mx-6 p-2 px-3 border-x-2 border-t-2 border-black bg-white ">
-                        <div className="">
-                            <div className="flex justify-between">
-                                <div className="flex flex-row mx-1 my-4">
-                                    <div className="grid content-center me-5">
-                                        <i class="fa-solid fa-user fa-2xl"></i>
-                                    </div>
-
-                                    <div className="flex flex-col">
-                                        <p className="font-extrabold">
-                                            {jawaban.user_name}
-                                        </p>
-                                        <div className="flex flex-row">
-                                            <div className="me-3">
-                                                <p>
-                                                    {formatDate(
-                                                        jawaban.updated_at
-                                                    )}
-                                                </p>
-                                            </div>
-                                            <p>-</p>
-                                            <div className="ml-2">
-                                                <p>{jawaban.jurusan_name}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {isUserQuestion && (
-                                    <div
-                                        className="flex mx-1 my-4"
-                                        onClick={() =>
-                                            handleValidate(jawaban.id)
-                                        }
-                                    >
-                                        <div className="cursor-pointer">
-                                            <i
-                                                class="fa-regular fa-circle-check fa-xl"
-                                                style={{
-                                                    color: `${
-                                                        jawaban.is_validated
-                                                            ? "#e61919"
-                                                            : "#02AF91"
-                                                    }`,
-                                                }}
-                                            ></i>
-                                        </div>
-                                        <p
-                                            className={`ms-2 cursor-pointer ${
-                                                jawaban.is_validated
-                                                    ? "text-red-500"
-                                                    : "text-green-500"
-                                            }`}
-                                        >
-                                            {`${
-                                                jawaban.is_validated
-                                                    ? "Batalkan Validasi"
-                                                    : "Validasi"
-                                            }`}
-                                        </p>
-                                    </div>
-                                )}
-
-                                {!isUserQuestion && jawaban.is_validated && (
-                                    <div className="flex mx-1 my-4">
-                                        <div className="">
-                                            <i
-                                                class="fa-regular fa-circle-check fa-xl"
-                                                style={{ color: "#02AF91" }}
-                                            ></i>
-                                        </div>
-                                        <p
-                                            className="ms-2"
-                                            style={{ color: "#02AF91" }}
-                                        >
-                                            Jawaban Valid
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
-                            <div className="font-bold m-2">
-                                <div className="my-4">
-                                    {jawaban.deskripsi_jawaban}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 divide-x mx-6 rounded-b-lg w-auto py-1 border-2 border-black bg-gray-300">
-                        <div className="">
-                            <div className="flex justify-center font-extrabold">
-                                <div
-                                    className="rounded-full px-2 mr-2"
-                                    style={{ backgroundColor: "#02AF91" }}
-                                >
-                                    {jawaban.likes.length}
-                                </div>
-                                <div onClick={() => handleLike(jawaban.id)}>
-                                    <i
-                                        className={`fa-lg ${
-                                            userHasLiked(jawaban.likes)
-                                                ? "fa-solid fa-heart"
-                                                : "fa-regular fa-heart"
-                                        }`}
-                                    ></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <JawabanCard
+                    jawaban={jawaban}
+                    isUserQuestion={isUserQuestion}
+                    auth={auth}
+                    formatDate={formatDate}
+                    handleValidate={handleValidate}
+                    handleLike={handleLike}
+                    userHasLiked={userHasLiked}
+                    handleDelete={handleDelete}
+                    handleUpdate={handleUpdate}
+                    setUpdateData={setUpdateData}
+                    updateData={updateData}
+                    updateProcessing={updateProcessing}
+                />
             ))}
         </DetailQuestionLayout>
     );

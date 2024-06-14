@@ -133,7 +133,7 @@ class QuestionController extends Controller
 
     public function show($id): Response
     {
-        $pertanyaan = Pertanyaan::with('user.jurusan')
+        $pertanyaan = Pertanyaan::with(['user.jurusan', 'collectedBy'])
             ->where('pertanyaans.id', $id)
             ->join('users', 'pertanyaans.user_id', '=', 'users.id')
             ->join('jurusans', 'users.jurusan_id', '=', 'jurusans.id')
@@ -217,6 +217,18 @@ class QuestionController extends Controller
             ->select('pertanyaans.*', 'users.name as user_name', 'jurusans.nama_jurusan as jurusan_name')
             ->first();
 
+            $topQuestions = Pertanyaan::with(['likes' => function ($query) {
+                $query->select('likeable_id', 'user_id');
+            }])
+            ->select('pertanyaans.*')
+            ->get()
+            ->map(function ($topQuestion) {
+                $deskripsi = Str::limit(strip_tags($topQuestion->deskripsi), 100);
+                return array_merge($topQuestion->toArray(), [
+                    'deskripsi' => $deskripsi,
+                ]);
+            });
+
         $topCourses = DB::table('pertanyaans')
             ->join('mata_kuliahs', 'pertanyaans.matkul_id', '=', 'mata_kuliahs.id')
             ->select('pertanyaans.matkul_id', 'mata_kuliahs.nama_matkul as matkul_name', DB::raw('count(*) as total_questions'))
@@ -235,6 +247,7 @@ class QuestionController extends Controller
         return Inertia::render('UpdateQuestion', [
             'pertanyaans' => $pertanyaans,
             'topCourses' => $topCourses,
+            'topQuestions' => $topQuestions,
             'photoPath' => $photoPath,
             'mataKuliahs' => $mataKuliahs,
             'pertanyaan' => $pertanyaan

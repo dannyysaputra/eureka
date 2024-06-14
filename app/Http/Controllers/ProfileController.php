@@ -20,9 +20,6 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         $jurusan = Jurusan::find($user->jurusan_id);
-        // $pertanyaans = Pertanyaan::where('user_id', $user->id)->get()->toArray();
-        // $pertanyaans = $user->pertanyaan;
-        // $jawabans = Jawaban::where('user_id', $user->id)->get();
         $user->pertanyaan;
         $user->jawabans;
 
