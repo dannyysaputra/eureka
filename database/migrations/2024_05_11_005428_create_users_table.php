@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('angkatan');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password'); 
+            $table->string('role')->default('mahasiswa');
             $table->rememberToken();
             $table->timestamps();
             

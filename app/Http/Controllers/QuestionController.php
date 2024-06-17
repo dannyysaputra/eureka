@@ -67,9 +67,11 @@ class QuestionController extends Controller
             ->limit(5)
             ->get();
         
+        $user = Auth::user();
 
         $photoPath = '/images/nav-bg.png';
         return Inertia::render('Question', [
+            'user' => $user,
             'photoPath' => $photoPath,
             'pertanyaans' => $pertanyaans,
             'topCourses' => $topCourses,

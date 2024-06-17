@@ -27,7 +27,7 @@ export default function QuestionLayout({
         color: "white",
     };
 
-    console.log(topCourses);
+    const isDosen = user.role == "dosen";
 
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -72,7 +72,7 @@ export default function QuestionLayout({
                                         Pertanyaan Saya
                                     </Dropdown.Link>
                                     <Dropdown.Link
-                                        href={route("logout")}
+                                        href={isDosen ? route("dosen.logout") : route("logout")}
                                         method="post"
                                         as="button"
                                     >

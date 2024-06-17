@@ -8,6 +8,10 @@ export default function Profile({ photoPath, jurusan, user }) {
         return format(new Date(dateString), "dd/MM/yyyy");
     };
 
+    const emailPattern = /^[^\s@]+@uinsgd\.ac\.id$/;
+    const isDosenEmail = emailPattern.test(user.email);
+    console.log(isDosenEmail);
+
     const [switchQuestion, setSwitchQuestion] = useState(true);
     const [switchAnswer, setSwitchAnswers] = useState(false);
 
@@ -21,12 +25,16 @@ export default function Profile({ photoPath, jurusan, user }) {
         setSwitchQuestion(false);
     };
 
-    const countValidated = user.jawabans.map((jawaban, index) => {
-        if (jawaban.is_validated) {
-            index++;
-        }
-        return index;
-    });
+    let countValidated = null;
+
+    if (!isDosenEmail) {
+        countValidated = user.jawabans.map((jawaban, index) => {
+            if (jawaban.is_validated) {
+                index++;
+            }
+            return index;
+        });
+    }
 
     return (
         <DetailQuestionLayout
@@ -91,25 +99,29 @@ export default function Profile({ photoPath, jurusan, user }) {
                         </p>
                     </div>
                 </div>
-                <div
-                    className="w-1/2 rounded-lg p-5"
-                    style={{ backgroundColor: "#02AF91" }}
-                >
-                    <div className="flex">
-                        <div className="me-4">
-                            <i class="fa-solid fa-chart-line fa-3x"></i>
+                {!isDosenEmail && (
+                    <div
+                        className="w-1/2 rounded-lg p-5"
+                        style={{ backgroundColor: "#02AF91" }}
+                    >
+                        <div className="flex">
+                            <div className="me-4">
+                                <i class="fa-solid fa-chart-line fa-3x"></i>
+                            </div>
+                            <p className="font-bold text-3xl my-auto">
+                                Statistik
+                            </p>
                         </div>
-                        <p className="font-bold text-3xl my-auto">Statistik</p>
+                        <div className="flex justify-around mt-6">
+                            <p className="font-semibold my-auto">
+                                {user.pertanyaan.length} Pertanyaan
+                            </p>
+                            <p className="font-semibold my-auto">
+                                {user.jawabans.length} Jawaban
+                            </p>
+                        </div>
                     </div>
-                    <div className="flex justify-around mt-6">
-                        <p className="font-semibold my-auto">
-                            {user.pertanyaan.length} Pertanyaan
-                        </p>
-                        <p className="font-semibold my-auto">
-                            {user.jawabans.length} Jawaban
-                        </p>
-                    </div>
-                </div>
+                )}
             </div>
 
             <div
@@ -142,6 +154,7 @@ export default function Profile({ photoPath, jurusan, user }) {
                 </div>
 
                 {switchQuestion &&
+                    !isDosenEmail &&
                     user.pertanyaan.map((pertanyaan) => (
                         <Link href={`/detail-pertanyaan/${pertanyaan.id}`}>
                             <div className="mb-10 border-4 mx-8 border-black rounded-md">
@@ -162,6 +175,7 @@ export default function Profile({ photoPath, jurusan, user }) {
                     ))}
 
                 {switchAnswer &&
+                    !isDosenEmail &&
                     user.jawabans.map((jawaban) => (
                         <Link
                             href={`/detail-pertanyaan/${jawaban.pertanyaan_id}`}

@@ -20,6 +20,7 @@ export default function DetailQuestionLayout({
         height: "90px",
         color: "white",
     };
+    const isDosen = user.role == "dosen";
 
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -65,7 +66,11 @@ export default function DetailQuestionLayout({
                                         Pertanyaan Saya
                                     </Dropdown.Link>
                                     <Dropdown.Link
-                                        href={route("logout")}
+                                        href={
+                                            isDosen
+                                                ? route("dosen.logout")
+                                                : route("logout")
+                                        }
                                         method="post"
                                         as="button"
                                     >

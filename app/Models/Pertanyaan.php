@@ -38,6 +38,6 @@ class Pertanyaan extends Model
 
     public function collectedBy()
     {
-        return $this->belongsToMany(User::class, 'collections', 'pertanyaan_id', 'user_id');
+        return $this->morphToMany(User::class, 'collectible', 'collections', 'pertanyaan_id', 'collectible_id');
     }
 }

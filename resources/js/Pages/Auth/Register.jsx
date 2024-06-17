@@ -228,7 +228,7 @@ export default function Register({ photoPath, backgroundPath, jurusans }) {
                                     </Link>
                                 </div>
 
-                                <PrimaryButton disabled={processing}>
+                                <PrimaryButton className="w-full" disabled={processing}>
                                     Gabung sekarang!
                                 </PrimaryButton>
 

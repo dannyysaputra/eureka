@@ -6,6 +6,7 @@ import { Inertia } from "@inertiajs/inertia";
 
 export default function Question({
     auth,
+    user,
     photoPath,
     pertanyaans,
     topCourses,
@@ -92,7 +93,10 @@ export default function Question({
             return 0;
         });
 
-    console.log(questions);
+    console.log(user);
+    const emailPattern = /^[^\s@]+@uinsgd\.ac\.id$/;
+    const isDosenEmail = emailPattern.test(user.email);
+    console.log(isDosenEmail);
 
     const handleLike = (questionId) => {
         post(`/pertanyaan/${questionId}/like`);
@@ -139,16 +143,18 @@ export default function Question({
                     Semua Pertanyaan
                 </div>
 
-                <div className="">
-                    <a href="ajukan-pertanyaan">
-                        <div
-                            className=" font-extrabold text-white rounded-2xl h-12 w-auto p-3 m-2"
-                            style={{ backgroundColor: "#02AF91" }}
-                        >
-                            Ajukan pertanyaan
-                        </div>
-                    </a>
-                </div>
+                {!isDosenEmail && (
+                    <div className="">
+                        <a href="ajukan-pertanyaan">
+                            <div
+                                className=" font-extrabold text-white rounded-2xl h-12 w-auto p-3 m-2"
+                                style={{ backgroundColor: "#02AF91" }}
+                            >
+                                Ajukan pertanyaan
+                            </div>
+                        </a>
+                    </div>
+                )}
             </div>
             <form onSubmit={handleSearch} className="w-full">
                 <div className="flex justify-center px-8 py-10">
@@ -234,9 +240,7 @@ export default function Question({
                                     </div>
                                 </div>
                                 <div className="ms-2">-</div>
-                                <div className="mx-2">
-                                    {pertanyaan.timeAgo}
-                                </div>
+                                <div className="mx-2">{pertanyaan.timeAgo}</div>
                             </div>
                             <div
                                 className="flex flex-row"

@@ -27,6 +27,8 @@ export default function MainLayout({ user, header, photoPath, children }) {
         color: "white",
     };
 
+    const isDosen = user.role == "dosen";
+
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
             <nav style={navbarStyle}>
@@ -71,7 +73,7 @@ export default function MainLayout({ user, header, photoPath, children }) {
                                         Profile
                                     </Dropdown.Link>
                                     <Dropdown.Link
-                                        href={route("logout")}
+                                        href={isDosen ? route("dosen.logout") : route("logout")}
                                         method="post"
                                         as="button"
                                     >

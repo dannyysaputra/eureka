@@ -32,13 +32,41 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    // public function store(LoginRequest $request): RedirectResponse
+    // {
+    //     $request->authenticate();
+
+    //     $request->session()->regenerate();
+    //     return redirect()->intended(route('pertanyaan', absolute: false));
+
+    //     // Determine the authenticated guard and redirect accordingly
+    //     // if (Auth::guard('dosen')->check()) {
+    //     //     return redirect()->intended(route('pertanyaan'));
+    //     // } else if (Auth::guard('web')->check()) {
+    //     //     // dd(session()->all());
+    //     //     return redirect()->intended(route('pertanyaan'));
+    //     // }
+
+    //     // // Default redirect if no guard matches (optional)
+    //     // return redirect()->intended(route('login'));
+    // }
+
+    public function store(Request $request)
     {
-        $request->authenticate();
+        $credentials = $request->validate(
+            [
+                'email' => 'required',
+                'password' => 'required',
+            ]
+        );
 
-        $request->session()->regenerate();
+        if (Auth::guard('web')->attempt($credentials)) {
+            $request->session()->regenerate();
+            // dd(session()->all());
+            return redirect()->intended(route('pertanyaan'));
+        }
 
-        return redirect()->intended(route('pertanyaan', absolute: false));
+        return back()->with('failed', 'Percobaan masuk gagal. Silahkan coba lagi!');
     }
 
     /**
@@ -46,12 +74,16 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        // dd(Auth::guard('web')->check());
+
         Auth::guard('web')->logout();
+        Auth::guard('dosens')->logout();
 
+        // dd(session()->all());
+    
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
-
+    
         return redirect('/');
     }
 }

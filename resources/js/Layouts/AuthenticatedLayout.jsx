@@ -9,6 +9,8 @@ export default function Authenticated({ user, header, photoPath, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
 
+    const isDosen = user.role == "dosen";
+
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
             <img className="" src={photoPath} alt="" />
@@ -66,7 +68,11 @@ export default function Authenticated({ user, header, photoPath, children }) {
                                             Profile
                                         </Dropdown.Link>
                                         <Dropdown.Link
-                                            href={route("logout")}
+                                            href={
+                                                isDosen
+                                                    ? route("dosen.logout")
+                                                    : route("logout")
+                                            }
                                             method="post"
                                             as="button"
                                         >

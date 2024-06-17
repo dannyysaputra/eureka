@@ -114,8 +114,10 @@ export default function DetailQuestion({
         return userBookmark;
     };
 
-    const isUserQuestion = pertanyaan.user_id === auth.user.id;
-
+    const isUserQuestion = pertanyaan.user_id == auth.user.id;
+    console.log(pertanyaan.user_id);
+    console.log(auth.user.id);
+    
     return (
         <DetailQuestionLayout
             user={auth.user}
@@ -133,7 +135,7 @@ export default function DetailQuestion({
                 </Link>
             </div>
             <div
-                className="rounded-lg mx-12 my-8 h-auto"
+                className="rounded-lg mx-12 my-8 h-auto pb-3"
                 style={{ backgroundColor: "#02AF91" }}
             >
                 <div className="flex flex-row p-4 ml-3">
@@ -189,7 +191,7 @@ export default function DetailQuestion({
                         Komentar
                     </div>
                 </div>
-                {!(pertanyaan.user_id == auth.user.id) && (
+                {isUserQuestion && (
                     <form onSubmit={submit}>
                         <div
                             className="flex flex-col"
