@@ -58,6 +58,7 @@ Route::middleware('auth:dosens')->group(function () {
     Route::get('/dosen/pertanyaan', [QuestionController::class, 'index'])->name('dosen.pertanyaan');
     Route::get('/dosen/detail-pertanyaan/{id}', [QuestionController::class, 'show'])->name('dosen.detail-pertanyaan');
     
+    Route::post('/dosen/jawaban/{id}/validate', [AnswerController::class, 'validateAnswer'])->name('dosen.validateAnswer');
     Route::post('/dosen/submit-jawaban', [AnswerController::class, 'store'])->name('dosen.submit-jawaban');
     Route::delete('/dosen/jawaban/{id}', [AnswerController::class, 'destroy'])->name('dosen.jawaban.destroy');
     Route::put('/dosen/jawaban/{id}', [AnswerController::class, 'update'])->name('dosen.jawaban.update');

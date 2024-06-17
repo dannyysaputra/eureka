@@ -79,15 +79,16 @@ class AnswerController extends Controller
     public function validateAnswer($id)
     {
         $jawaban = Jawaban::findOrFail($id);
+        $user = $jawaban->user;
 
         if ($jawaban->is_validated) {
             $jawaban->is_validated = false;
+            $user->minusPoints(25);
         } else {
+            $user->addPoints(25);
             $jawaban->is_validated = true;
         }
 
-        $user = $jawaban->user;
-        $user->addPoints(25);
         
         $jawaban->save();
 

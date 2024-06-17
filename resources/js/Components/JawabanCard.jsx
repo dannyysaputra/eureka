@@ -7,7 +7,7 @@ import CustomConfirmDialog from "./DeleteConfirmation";
 const JawabanCard = ({
     jawaban,
     auth,
-    pertanyaanId,
+    pertanyaanUserId,
     formatDate,
     handleValidate,
     handleLike,
@@ -23,8 +23,10 @@ const JawabanCard = ({
     console.log(jawaban);
 
     const isDosen = auth.user.role === "dosen";
-    const isUserQuestion = !isDosen && pertanyaanId == auth.user.id;
+    const isUserQuestion = !isDosen && pertanyaanUserId == auth.user.id;
     const isFromDosen = jawaban.dosen_id != null;
+
+    console.log(pertanyaanUserId == auth.user.id);
 
     const myAnswer =
         (jawaban.user_id &&
@@ -33,8 +35,6 @@ const JawabanCard = ({
         (jawaban.dosen_id &&
             jawaban.dosen_id === auth.user.id &&
             auth.user.role === "dosen");
-
-    console.log(myAnswer);
 
     const handleEditClick = () => {
         setIsEditMode(true);
@@ -118,40 +118,69 @@ const JawabanCard = ({
                                     </div>
                                 </div>
                             </div>
-                            {isUserQuestion &&
-                                isFromDosen(
-                                    <div
-                                        className="flex mx-1 my-4"
-                                        onClick={() =>
-                                            handleValidate(jawaban.id)
-                                        }
-                                    >
-                                        <div className="cursor-pointer">
-                                            <i
-                                                className={`fa-regular fa-circle-check fa-xl`}
-                                                style={{
-                                                    color: `${
-                                                        jawaban.is_validated
-                                                            ? "#e61919"
-                                                            : "#02AF91"
-                                                    }`,
-                                                }}
-                                            ></i>
-                                        </div>
-                                        <p
-                                            className={`ms-2 cursor-pointer ${
-                                                jawaban.is_validated
-                                                    ? "text-red-500"
-                                                    : "text-green-500"
-                                            }`}
-                                        >
-                                            {jawaban.is_validated
-                                                ? "Batalkan Validasi"
-                                                : "Validasi"}
-                                        </p>
+                            {isUserQuestion && !isFromDosen && (
+                                <div
+                                    className="flex mx-1 my-4"
+                                    onClick={() => handleValidate(jawaban.id)}
+                                >
+                                    <div className="cursor-pointer">
+                                        <i
+                                            className={`fa-regular fa-circle-check fa-xl`}
+                                            style={{
+                                                color: `${
+                                                    jawaban.is_validated
+                                                        ? "#e61919"
+                                                        : "#02AF91"
+                                                }`,
+                                            }}
+                                        ></i>
                                     </div>
-                                )}
-                            {!isUserQuestion && jawaban.is_validated && (
+                                    <p
+                                        className={`ms-2 cursor-pointer ${
+                                            jawaban.is_validated
+                                                ? "text-red-500"
+                                                : "text-green-500"
+                                        }`}
+                                    >
+                                        {jawaban.is_validated
+                                            ? "Batalkan Validasi"
+                                            : "Validasi"}
+                                    </p>
+                                </div>
+                            )}
+
+                            {isDosen && !isFromDosen && (
+                                <div
+                                    className="flex mx-1 my-4"
+                                    onClick={() => handleValidate(jawaban.id)}
+                                >
+                                    <div className="cursor-pointer">
+                                        <i
+                                            className={`fa-regular fa-circle-check fa-xl`}
+                                            style={{
+                                                color: `${
+                                                    jawaban.is_validated
+                                                        ? "#e61919"
+                                                        : "#02AF91"
+                                                }`,
+                                            }}
+                                        ></i>
+                                    </div>
+                                    <p
+                                        className={`ms-2 cursor-pointer ${
+                                            jawaban.is_validated
+                                                ? "text-red-500"
+                                                : "text-green-500"
+                                        }`}
+                                    >
+                                        {jawaban.is_validated
+                                            ? "Batalkan Validasi"
+                                            : "Validasi"}
+                                    </p>
+                                </div>
+                            )}
+
+                            {jawaban.is_validated && (
                                 <div className="flex mx-1 my-4">
                                     <div>
                                         <i

@@ -62,6 +62,11 @@ class User extends Authenticatable
         $this->save();
     }
 
+    public function minusPoints($points) {
+        $this->points -= $points;
+        $this->save();
+    }
+
     public function getRankPositionAttribute()
     {
         $users = User::orderBy('points', 'desc')->get();

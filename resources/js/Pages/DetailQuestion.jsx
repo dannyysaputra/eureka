@@ -123,7 +123,11 @@ export default function DetailQuestion({
     };
 
     const handleValidate = (answerId) => {
-        post(`/jawaban/${answerId}/validate`);
+        if (isDosen) {
+            post(`/dosen/jawaban/${answerId}/validate`);
+        } else {
+            post(`/jawaban/${answerId}/validate`);
+        }
     };
 
     const userHasLiked = (likes) => {
@@ -242,7 +246,7 @@ export default function DetailQuestion({
                 <JawabanCard
                     jawaban={jawaban}
                     auth={auth}
-                    pertanyaanId={pertanyaan.id}
+                    pertanyaanUserId={pertanyaan.user_id}
                     formatDate={formatDate}
                     handleValidate={handleValidate}
                     handleLike={handleLike}
