@@ -28,7 +28,7 @@ Route::middleware('auth:web')->group(function () {
 
     Route::post('/submit-jawaban', [AnswerController::class, 'store'])->name('submit-jawaban');
     Route::post('/jawaban/{id}/like', [AnswerController::class, 'likeAnswer'])->name('likeAnswer');
-    Route::post('/jawaban/{id}/validate', [AnswerController::class, 'validateAnswer'])->name('likeAnswer');
+    Route::post('/jawaban/{id}/validate', [AnswerController::class, 'validateAnswer'])->name('validateAnswer');
     Route::delete('/jawaban/{id}', [AnswerController::class, 'destroy'])->name('jawaban.destroy');
     Route::put('/jawaban/{id}', [AnswerController::class, 'update'])->name('jawaban.update');
     
@@ -56,8 +56,11 @@ Route::middleware('auth:web')->group(function () {
 
 Route::middleware('auth:dosens')->group(function () {
     Route::get('/dosen/pertanyaan', [QuestionController::class, 'index'])->name('dosen.pertanyaan');
-    Route::get('/detail-pertanyaan/{id}', [QuestionController::class, 'show'])->name('detail-pertanyaan');
-
+    Route::get('/dosen/detail-pertanyaan/{id}', [QuestionController::class, 'show'])->name('dosen.detail-pertanyaan');
+    
+    Route::post('/dosen/submit-jawaban', [AnswerController::class, 'store'])->name('dosen.submit-jawaban');
+    Route::delete('/dosen/jawaban/{id}', [AnswerController::class, 'destroy'])->name('dosen.jawaban.destroy');
+    Route::put('/dosen/jawaban/{id}', [AnswerController::class, 'update'])->name('dosen.jawaban.update');
 });
 
 

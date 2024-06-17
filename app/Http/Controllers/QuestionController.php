@@ -150,9 +150,17 @@ class QuestionController extends Controller
             ->with(['likes' => function ($query) {
                 $query->select('likeable_id', 'user_id');
             }])
-            ->join('users', 'jawabans.user_id', '=', 'users.id')
-            ->join('jurusans', 'users.jurusan_id', '=', 'jurusans.id')
-            ->select('jawabans.*', 'users.name as user_name', 'jurusans.nama_jurusan as jurusan_name')
+            ->leftJoin('users', 'jawabans.user_id', '=', 'users.id')
+            ->leftJoin('dosens', 'jawabans.dosen_id', '=', 'dosens.id')
+            ->leftJoin('jurusans as user_jurusan', 'users.jurusan_id', '=', 'user_jurusan.id')
+            ->leftJoin('jurusans as dosen_jurusan', 'dosens.jurusan_id', '=', 'dosen_jurusan.id')
+            ->select(
+                'jawabans.*', 
+                'users.name as user_name', 
+                'user_jurusan.nama_jurusan as user_jurusan_name', 
+                'dosens.name as dosen_name',
+                'dosen_jurusan.nama_jurusan as dosen_jurusan_name'
+            )
             ->get();
 
         $photoPath = '/images/nav-bg.png';

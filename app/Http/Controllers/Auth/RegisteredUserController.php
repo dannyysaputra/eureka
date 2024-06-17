@@ -61,6 +61,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return Inertia::render('Question');
+        return Inertia::render('Welcome');
     }
 }

@@ -6,8 +6,8 @@ import CustomConfirmDialog from "./DeleteConfirmation";
 
 const JawabanCard = ({
     jawaban,
-    isUserQuestion,
     auth,
+    pertanyaanId,
     formatDate,
     handleValidate,
     handleLike,
@@ -20,7 +20,21 @@ const JawabanCard = ({
 }) => {
     const [isEditMode, setIsEditMode] = useState(false);
 
-    console.log(updateData);
+    console.log(jawaban);
+
+    const isDosen = auth.user.role === "dosen";
+    const isUserQuestion = !isDosen && pertanyaanId == auth.user.id;
+    const isFromDosen = jawaban.dosen_id != null;
+
+    const myAnswer =
+        (jawaban.user_id &&
+            jawaban.user_id === auth.user.id &&
+            auth.user.role === "mahasiswa") ||
+        (jawaban.dosen_id &&
+            jawaban.dosen_id === auth.user.id &&
+            auth.user.role === "dosen");
+
+    console.log(myAnswer);
 
     const handleEditClick = () => {
         setIsEditMode(true);
@@ -84,7 +98,9 @@ const JawabanCard = ({
                                 </div>
                                 <div className="flex flex-col">
                                     <p className="font-extrabold">
-                                        {jawaban.user_name}
+                                        {jawaban.user_name ||
+                                            jawaban.dosen_name}{" "}
+                                        {jawaban.dosen_name ? "- Dosen" : ""}
                                     </p>
                                     <div className="flex flex-row">
                                         <div className="me-3">
@@ -94,41 +110,47 @@ const JawabanCard = ({
                                         </div>
                                         <p>-</p>
                                         <div className="ml-2">
-                                            <p>{jawaban.jurusan_name}</p>
+                                            <p>
+                                                {jawaban.user_jurusan_name ||
+                                                    jawaban.dosen_jurusan_name}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            {isUserQuestion && (
-                                <div
-                                    className="flex mx-1 my-4"
-                                    onClick={() => handleValidate(jawaban.id)}
-                                >
-                                    <div className="cursor-pointer">
-                                        <i
-                                            className={`fa-regular fa-circle-check fa-xl`}
-                                            style={{
-                                                color: `${
-                                                    jawaban.is_validated
-                                                        ? "#e61919"
-                                                        : "#02AF91"
-                                                }`,
-                                            }}
-                                        ></i>
-                                    </div>
-                                    <p
-                                        className={`ms-2 cursor-pointer ${
-                                            jawaban.is_validated
-                                                ? "text-red-500"
-                                                : "text-green-500"
-                                        }`}
+                            {isUserQuestion &&
+                                isFromDosen(
+                                    <div
+                                        className="flex mx-1 my-4"
+                                        onClick={() =>
+                                            handleValidate(jawaban.id)
+                                        }
                                     >
-                                        {jawaban.is_validated
-                                            ? "Batalkan Validasi"
-                                            : "Validasi"}
-                                    </p>
-                                </div>
-                            )}
+                                        <div className="cursor-pointer">
+                                            <i
+                                                className={`fa-regular fa-circle-check fa-xl`}
+                                                style={{
+                                                    color: `${
+                                                        jawaban.is_validated
+                                                            ? "#e61919"
+                                                            : "#02AF91"
+                                                    }`,
+                                                }}
+                                            ></i>
+                                        </div>
+                                        <p
+                                            className={`ms-2 cursor-pointer ${
+                                                jawaban.is_validated
+                                                    ? "text-red-500"
+                                                    : "text-green-500"
+                                            }`}
+                                        >
+                                            {jawaban.is_validated
+                                                ? "Batalkan Validasi"
+                                                : "Validasi"}
+                                        </p>
+                                    </div>
+                                )}
                             {!isUserQuestion && jawaban.is_validated && (
                                 <div className="flex mx-1 my-4">
                                     <div>
@@ -172,28 +194,28 @@ const JawabanCard = ({
                                 </div>
                             </div>
                         </div>
-                        {jawaban.user_id === auth.user.id && (
-                            <div className="cursor-pointer">
-                                <div className="flex justify-center">
-                                    <CustomConfirmDialog
-                                        targetId={jawaban.id}
-                                        onDelete={handleDelete}
-                                    />
-                                </div>
-                            </div>
-                        )}
-                        {jawaban.user_id === auth.user.id && (
-                            <div className="cursor-pointer">
-                                <div
-                                    className="flex justify-center"
-                                    onClick={handleEditClick}
-                                >
-                                    <div>
-                                        <i className="fa-regular fa-edit fa-lg"></i>
+                        {myAnswer && (
+                            <>
+                                <div className="cursor-pointer">
+                                    <div className="flex justify-center">
+                                        <CustomConfirmDialog
+                                            targetId={jawaban.id}
+                                            onDelete={handleDelete}
+                                        />
                                     </div>
-                                    <p className="ml-2">Edit</p>
                                 </div>
-                            </div>
+                                <div className="cursor-pointer">
+                                    <div
+                                        className="flex justify-center"
+                                        onClick={handleEditClick}
+                                    >
+                                        <div>
+                                            <i className="fa-regular fa-edit fa-lg"></i>
+                                        </div>
+                                        <p className="ml-2">Edit</p>
+                                    </div>
+                                </div>
+                            </>
                         )}
                     </div>
                 </div>

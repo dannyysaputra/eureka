@@ -94,9 +94,8 @@ export default function Question({
         });
 
     console.log(user);
-    const emailPattern = /^[^\s@]+@uinsgd\.ac\.id$/;
-    const isDosenEmail = emailPattern.test(user.email);
-    console.log(isDosenEmail);
+    const isDosen = user.role === 'dosen';
+    console.log(isDosen);
 
     const handleLike = (questionId) => {
         post(`/pertanyaan/${questionId}/like`);
@@ -143,7 +142,7 @@ export default function Question({
                     Semua Pertanyaan
                 </div>
 
-                {!isDosenEmail && (
+                {!isDosen && (
                     <div className="">
                         <a href="ajukan-pertanyaan">
                             <div
@@ -198,7 +197,7 @@ export default function Question({
             {filteredQuestions?.map((pertanyaan) => (
                 <div className="flex justify-center px-8 mx-4 mt-5">
                     <div className="rounded-lg border bg-gray-300 w-screen h-auto">
-                        <Link href={`/detail-pertanyaan/${pertanyaan.id}`}>
+                        <Link href={isDosen ? `/dosen/detail-pertanyaan/${pertanyaan.id}` : `/detail-pertanyaan/${pertanyaan.id}`}>
                             <div className="flex justify-between my-8">
                                 <div className="font-bold mx-6">
                                     {pertanyaan.judul}

@@ -16,6 +16,8 @@ export default function DetailQuestion({
     jawabans,
 }) {
     const [answers, setAnswers] = useState(jawabans || []);
+    const isDosen = auth.user.role === "dosen";
+    const isUserQuestion = !isDosen && pertanyaan.user_id == auth.user.id;
 
     useEffect(() => {
         if (!window.Echo) {
@@ -60,28 +62,50 @@ export default function DetailQuestion({
         pertanyaanId: pertanyaan.id,
     });
 
-    const { data: updateData, setData: setUpdateData, put, processing: updateProcessing, errors: updateErrors, reset: resetUpdate } = useForm({
+    const {
+        data: updateData,
+        setData: setUpdateData,
+        put,
+        processing: updateProcessing,
+        errors: updateErrors,
+        reset: resetUpdate,
+    } = useForm({
         deskripsiJawaban: data.deskripsiJawaban,
     });
 
     const submit = (e) => {
         e.preventDefault();
 
-        post(route("submit-jawaban"));
+        if (isDosen) {
+            post(route("dosen.submit-jawaban"));
+        } else {
+            post(route("submit-jawaban"));
+        }
     };
 
     const handleDelete = async (id) => {
-        Inertia.delete(`/jawaban/${id}`);
+        if (isDosen) {
+            Inertia.delete(`/dosen/jawaban/${id}`);
+        } else {
+            Inertia.delete(`/jawaban/${id}`);
+        }
     };
 
     const handleUpdate = (id, updatedContent) => {
         setUpdateData("deskripsiJawaban", updatedContent);
-        put(route("jawaban.update", id), {
+
+        const routeName = isDosen ? "dosen.jawaban.update" : "jawaban.update";
+
+        put(route(routeName, id), {
             preserveScroll: true,
             onSuccess: (response) => {
-                setAnswers(answers.map(answer => 
-                    answer.id === id ? { ...answer, deskripsi_jawaban: updatedContent } : answer
-                ));
+                setAnswers(
+                    answers.map((answer) =>
+                        answer.id === id
+                            ? { ...answer, deskripsi_jawaban: updatedContent }
+                            : answer
+                    )
+                );
             },
         });
     };
@@ -114,10 +138,8 @@ export default function DetailQuestion({
         return userBookmark;
     };
 
-    const isUserQuestion = pertanyaan.user_id == auth.user.id;
-    console.log(pertanyaan.user_id);
-    console.log(auth.user.id);
-    
+    console.log(answers);
+
     return (
         <DetailQuestionLayout
             user={auth.user}
@@ -191,20 +213,19 @@ export default function DetailQuestion({
                         Komentar
                     </div>
                 </div>
-                {isUserQuestion && (
+                {!isUserQuestion && (
                     <form onSubmit={submit}>
-                        <div
-                            className="flex flex-col"
-                            style={{ backgroundColor: "#F3F4F6" }}
-                        >
-                            <div className="mt-5 h-auto flex-grow">
-                                <RichTextEditor
-                                    name="deskripsiJawaban"
-                                    value={data.deskripsiJawaban}
-                                    onChange={(content) =>
-                                        setData("deskripsiJawaban", content)
-                                    }
-                                />
+                        <div className="flex flex-col mx-5">
+                            <div className="mt-5 h-auto flex-grow bg-white">
+                                <div className="h-auto flex-grow">
+                                    <RichTextEditor
+                                        name="deskripsiJawaban"
+                                        value={data.deskripsiJawaban}
+                                        onChange={(content) =>
+                                            setData("deskripsiJawaban", content)
+                                        }
+                                    />
+                                </div>
                             </div>
                             <PrimaryButton
                                 disabled={processing}
@@ -220,8 +241,8 @@ export default function DetailQuestion({
             {answers.map((jawaban) => (
                 <JawabanCard
                     jawaban={jawaban}
-                    isUserQuestion={isUserQuestion}
                     auth={auth}
+                    pertanyaanId={pertanyaan.id}
                     formatDate={formatDate}
                     handleValidate={handleValidate}
                     handleLike={handleLike}

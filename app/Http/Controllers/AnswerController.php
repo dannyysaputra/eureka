@@ -14,6 +14,17 @@ class AnswerController extends Controller
     {
         $user = Auth::user();
 
+        $userId = null;
+        $dosenId = null;
+        $valid = false;
+
+        if ($user->role === 'dosen') {
+            $dosenId = $user->id;
+            $valid = true;
+        } else {
+            $userId = $user->id;
+        }
+
         $request->validate([
             'deskripsiJawaban' => 'required',
             'pertanyaanId' => 'required',
@@ -22,10 +33,14 @@ class AnswerController extends Controller
         $jawaban = Jawaban::create([
             'deskripsi_jawaban' => $request->deskripsiJawaban,
             'pertanyaan_id' => $request->pertanyaanId,
-            'user_id' => $user->id
+            'is_validated' => $valid,
+            'user_id' => $userId,
+            'dosen_id' => $dosenId
         ]);
 
-        $user->addPoints(10);
+        if ($userId !== null) {
+            $user->addPoints(10);
+        }
 
         $jawaban->save();
 
