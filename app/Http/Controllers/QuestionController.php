@@ -23,7 +23,7 @@ class QuestionController extends Controller
 
         $pertanyaans = Pertanyaan::with(['likes' => function ($query) {
             $query->select('likeable_id', 'user_id');
-        }, 'mataKuliah', 'collectedBy'])
+        }, 'mataKuliah', 'collectors', 'dosenCollectors'])
         ->withCount('jawabans')
         ->when($search, function ($query, $search) {
             return $query->where('pertanyaans.judul', 'like', "%{$search}%")
@@ -68,6 +68,7 @@ class QuestionController extends Controller
             ->get();
         
         $user = Auth::user();
+        $user->collectedPertanyaans;
 
         $photoPath = '/images/nav-bg.png';
         return Inertia::render('Question', [

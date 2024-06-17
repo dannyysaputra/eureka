@@ -62,6 +62,10 @@ Route::middleware('auth:dosens')->group(function () {
     Route::post('/dosen/submit-jawaban', [AnswerController::class, 'store'])->name('dosen.submit-jawaban');
     Route::delete('/dosen/jawaban/{id}', [AnswerController::class, 'destroy'])->name('dosen.jawaban.destroy');
     Route::put('/dosen/jawaban/{id}', [AnswerController::class, 'update'])->name('dosen.jawaban.update');
+
+    Route::get('/dosen/koleksi', [CollectionController::class, 'index'])->name('koleksi');
+    Route::post('/dosen/pertanyaan/{id}/add-collection', [CollectionController::class, 'addCollection']);
+    Route::post('/dosen/pertanyaan/{id}/remove-collection', [CollectionController::class, 'removeCollection']);
 });
 
 

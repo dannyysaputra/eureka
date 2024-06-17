@@ -94,7 +94,7 @@ export default function Question({
         });
 
     console.log(user);
-    const isDosen = user.role === 'dosen';
+    const isDosen = user.role === "dosen";
     console.log(isDosen);
 
     const handleLike = (questionId) => {
@@ -102,11 +102,19 @@ export default function Question({
     };
 
     const handleBookmark = (questionId) => {
-        post(`/pertanyaan/${questionId}/add-collection`);
+        if (isDosen) {
+            post(`/dosen/pertanyaan/${questionId}/add-collection`);
+        } else {
+            post(`/dosen/pertanyaan/${questionId}/add-collection`);
+        }
     };
 
     const handleUnbookmark = (questionId) => {
-        post(`/pertanyaan/${questionId}/remove-collection`);
+        if (isDosen) {
+            post(`/dosen/pertanyaan/${questionId}/remove-collection`);
+        } else {
+            post(`/dosen/pertanyaan/${questionId}/remove-collection`);
+        }
     };
 
     const userHasBookmarked = (bookmark) => {
@@ -120,6 +128,7 @@ export default function Question({
         const userLiked = likes.some((like) => like.user_id == auth.user.id);
         return userLiked;
     };
+    console.log(pertanyaans);
 
     return (
         <QuestionLayout
@@ -197,7 +206,13 @@ export default function Question({
             {filteredQuestions?.map((pertanyaan) => (
                 <div className="flex justify-center px-8 mx-4 mt-5">
                     <div className="rounded-lg border bg-gray-300 w-screen h-auto">
-                        <Link href={isDosen ? `/dosen/detail-pertanyaan/${pertanyaan.id}` : `/detail-pertanyaan/${pertanyaan.id}`}>
+                        <Link
+                            href={
+                                isDosen
+                                    ? `/dosen/detail-pertanyaan/${pertanyaan.id}`
+                                    : `/detail-pertanyaan/${pertanyaan.id}`
+                            }
+                        >
                             <div className="flex justify-between my-8">
                                 <div className="font-bold mx-6">
                                     {pertanyaan.judul}
@@ -282,7 +297,7 @@ export default function Question({
                                 />
                                 <div className="mx-1">{pertanyaan.insight}</div>
                             </div>
-                            {userHasBookmarked(pertanyaan.collected_by) ? (
+                            {userHasBookmarked(pertanyaan.collectors) ? (
                                 <div
                                     className="flex"
                                     onClick={() =>

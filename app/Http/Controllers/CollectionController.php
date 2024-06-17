@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dosen;
 use App\Models\Pertanyaan;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -50,12 +51,24 @@ class CollectionController extends Controller
 
     public function addCollection($questionId)
     {
-        auth()->user()->collections()->attach($questionId);
+        $user = auth()->user();
+    
+        // Validasi bahwa pertanyaan ada
+        $pertanyaan = Pertanyaan::findOrFail($questionId);
+
+        if ($user->role === 'dosen') {
+            $dosen = Dosen::find($user->id); 
+            if ($dosen) {
+                $dosen->collectedPertanyaans()->attach($pertanyaan);
+            }
+        } else {
+            $user->collectedPertanyaans()->attach($pertanyaan);
+        }
     }
 
     // Menghapus Collection
     public function removeCollection($questionId)
     {
-        auth()->user()->collections()->detach($questionId);
+        auth()->user()->collectedPertanyaans()->detach($questionId);
     }
 }
