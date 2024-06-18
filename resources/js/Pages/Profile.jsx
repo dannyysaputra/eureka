@@ -8,9 +8,7 @@ export default function Profile({ photoPath, jurusan, user }) {
         return format(new Date(dateString), "dd/MM/yyyy");
     };
 
-    const emailPattern = /^[^\s@]+@uinsgd\.ac\.id$/;
-    const isDosenEmail = emailPattern.test(user.email);
-    console.log(isDosenEmail);
+    const isDosen = user.role === "dosen";
 
     const [switchQuestion, setSwitchQuestion] = useState(true);
     const [switchAnswer, setSwitchAnswers] = useState(false);
@@ -26,8 +24,9 @@ export default function Profile({ photoPath, jurusan, user }) {
     };
 
     let countValidated = null;
+    console.log(user);
 
-    if (!isDosenEmail) {
+    if (!isDosen) {
         countValidated = user.jawabans.map((jawaban, index) => {
             if (jawaban.is_validated) {
                 index++;
@@ -55,12 +54,14 @@ export default function Profile({ photoPath, jurusan, user }) {
                     </div>
                     <div className="my-auto ms-5">
                         <p className="font-bold text-xl">{user.name}</p>
-                        <p>{user.nim}</p>
+                        <p>{user.nim || user.nip}</p>
                         <p>{jurusan.nama_jurusan}</p>
                     </div>
                 </div>
                 <div className="me-4">
-                    <Link href="/edit-profile">
+                    <Link
+                        href={isDosen ? "/dosen/edit-profile" : "/edit-profile"}
+                    >
                         <div
                             className="rounded p-2 font-bold text-sm mb-4"
                             style={{ backgroundColor: "#02AF91" }}
@@ -68,12 +69,14 @@ export default function Profile({ photoPath, jurusan, user }) {
                             Edit Profil
                         </div>
                     </Link>
-                    <div
-                        className="rounded-full pt-8 py-5 font-bold text-3xl"
-                        style={{ backgroundColor: "#02AF91" }}
-                    >
-                        <p className="text-center">#{user.rank_position}</p>
-                    </div>
+                    {!isDosen && (
+                        <div
+                            className="rounded-full pt-8 py-5 font-bold text-3xl"
+                            style={{ backgroundColor: "#02AF91" }}
+                        >
+                            <p className="text-center">#{user.rank_position}</p>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -99,19 +102,23 @@ export default function Profile({ photoPath, jurusan, user }) {
                         </p>
                     </div>
                 </div>
-                {!isDosenEmail && (
-                    <div
-                        className="w-1/2 rounded-lg p-5"
-                        style={{ backgroundColor: "#02AF91" }}
-                    >
-                        <div className="flex">
-                            <div className="me-4">
-                                <i class="fa-solid fa-chart-line fa-3x"></i>
-                            </div>
-                            <p className="font-bold text-3xl my-auto">
-                                Statistik
+                <div
+                    className="w-1/2 rounded-lg p-5"
+                    style={{ backgroundColor: "#02AF91" }}
+                >
+                    <div className="flex">
+                        <div className="me-4">
+                            <i class="fa-solid fa-chart-line fa-3x"></i>
+                        </div>
+                        <p className="font-bold text-3xl my-auto">Statistik</p>
+                    </div>
+                    {isDosen ? (
+                        <div className="flex ms-8 mt-6">
+                            <p className="font-semibold my-auto">
+                                {user.jawabans.length} Jawaban
                             </p>
                         </div>
+                    ) : (
                         <div className="flex justify-around mt-6">
                             <p className="font-semibold my-auto">
                                 {user.pertanyaan.length} Pertanyaan
@@ -120,8 +127,8 @@ export default function Profile({ photoPath, jurusan, user }) {
                                 {user.jawabans.length} Jawaban
                             </p>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
 
             <div
@@ -154,7 +161,7 @@ export default function Profile({ photoPath, jurusan, user }) {
                 </div>
 
                 {switchQuestion &&
-                    !isDosenEmail &&
+                    !isDosen &&
                     user.pertanyaan.map((pertanyaan) => (
                         <Link href={`/detail-pertanyaan/${pertanyaan.id}`}>
                             <div className="mb-10 border-4 mx-8 border-black rounded-md">
@@ -175,7 +182,6 @@ export default function Profile({ photoPath, jurusan, user }) {
                     ))}
 
                 {switchAnswer &&
-                    !isDosenEmail &&
                     user.jawabans.map((jawaban) => (
                         <Link
                             href={`/detail-pertanyaan/${jawaban.pertanyaan_id}`}

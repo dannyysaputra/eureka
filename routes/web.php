@@ -9,18 +9,6 @@ use App\Http\Controllers\QuestionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
-Route::get('/', function () {
-    $photoPath = '/images/nav-bg.png'; 
-
-    return Inertia::render('Welcome', [
-        'photoPath' => $photoPath,
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-})->name('welcome');
     
 Route::middleware('auth:web')->group(function () {
     Route::get('/ajukan-pertanyaan', [QuestionController::class, 'askQuestion'])->name('ajukan-pertanyaan');
@@ -66,7 +54,25 @@ Route::middleware('auth:dosens')->group(function () {
     Route::get('/dosen/koleksi', [CollectionController::class, 'index'])->name('koleksi');
     Route::post('/dosen/pertanyaan/{id}/add-collection', [CollectionController::class, 'addCollection']);
     Route::post('/dosen/pertanyaan/{id}/remove-collection', [CollectionController::class, 'removeCollection']);
+
+    Route::get('/dosen/leaderboard', [LeaderboardController::class, 'index'])->name('dosen.leaderboard');
+
+    Route::get('/dosen/profile', [ProfileController::class, 'index'])->name('dosen.profile');   
+    Route::get('/dosen/edit-profile', [ProfileController::class, 'edit'])->name('dosen.profile.edit');
+    Route::put('/dosen/profile', [ProfileController::class, 'update'])->name('dosen.profile.update');
+    Route::delete('/dosen/profile', [ProfileController::class, 'destroy'])->name('dosen.profile.destroy');
 });
 
+Route::get('/', function () {
+    $photoPath = '/images/nav-bg.png'; 
+
+    return Inertia::render('Welcome', [
+        'photoPath' => $photoPath,
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
+})->name('welcome');
 
 require __DIR__.'/auth.php';
