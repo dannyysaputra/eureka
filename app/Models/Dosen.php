@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Dosen extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, HasUuids;
 
     protected $guarded = [
         'id'
@@ -24,7 +24,8 @@ class Dosen extends Authenticatable
 
     public function collectedPertanyaans()
     {
-        return $this->morphedByMany(Pertanyaan::class, 'collectible', 'collections', 'collectible_id', 'pertanyaan_id');
+        return $this->morphedByMany(Pertanyaan::class, 'collectible', 'collections', 'collectible_id', 'pertanyaan_id')
+            ->withPivot('collectible_type');
     }
 
     public function jawabans(): HasMany

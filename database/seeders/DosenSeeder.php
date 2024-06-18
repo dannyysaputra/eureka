@@ -16,7 +16,7 @@ class DosenSeeder extends Seeder
     public function run(): void
     {
         Dosen::insert([
-            // 'id' => Str::uuid(),
+            'id' => Str::uuid(),
             'jurusan_id' => '1',
             'name' => 'Wisnu Uriawan',
             'email' => 'wisnu_u@uinsgd.ac.id',

@@ -7,6 +7,7 @@ use App\Models\Jurusan;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -49,6 +50,7 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = User::create([
+            'id' => Str::uuid(),
             'name' => $request->name,
             'email' => $request->email,
             'nim' => $request->nim,
@@ -61,6 +63,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return Inertia::render('Welcome');
+        return Inertia::render('Question');
     }
 }

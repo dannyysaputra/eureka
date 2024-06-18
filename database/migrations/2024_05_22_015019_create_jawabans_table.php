@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->longText('deskripsi_jawaban');
             $table->foreignUuid('pertanyaan_id')->constrained('pertanyaans')->onDelete('cascade');
-            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
-            $table->foreignId('dosen_id')->nullable()->constrained('dosens')->onDelete('cascade');
             $table->timestamps();
         });
     }

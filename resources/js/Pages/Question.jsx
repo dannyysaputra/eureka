@@ -93,9 +93,8 @@ export default function Question({
             return 0;
         });
 
-    console.log(user);
+    console.log("id: ", user.id);
     const isDosen = user.role === "dosen";
-    console.log(isDosen);
 
     const handleLike = (questionId) => {
         post(`/pertanyaan/${questionId}/like`);
@@ -105,7 +104,7 @@ export default function Question({
         if (isDosen) {
             post(`/dosen/pertanyaan/${questionId}/add-collection`);
         } else {
-            post(`/dosen/pertanyaan/${questionId}/add-collection`);
+            post(`/pertanyaan/${questionId}/add-collection`);
         }
     };
 
@@ -113,22 +112,33 @@ export default function Question({
         if (isDosen) {
             post(`/dosen/pertanyaan/${questionId}/remove-collection`);
         } else {
-            post(`/dosen/pertanyaan/${questionId}/remove-collection`);
+            post(`/pertanyaan/${questionId}/remove-collection`);
         }
     };
 
-    const userHasBookmarked = (bookmark) => {
-        const userBookmark = bookmark.some(
-            (bookmark) => bookmark.id == auth.user.id
-        );
-        return userBookmark;
+    const userHasBookmarked = (pertanyaan) => {
+        let found = false;
+        const userId = auth.user.id;
+        const userRole = auth.user.role;
+
+        if (pertanyaan.collectors && userRole === 'mahasiswa') {
+            found = pertanyaan.collectors.some(
+                (collector) => collector.id === userId
+            );
+        }
+        if (pertanyaan.dosen_collectors && userRole === 'dosen') {
+            found = pertanyaan.dosen_collectors.some(
+                (dosenCollector) => dosenCollector.id === userId
+            );
+        }
+
+        return found;
     };
 
     const userHasLiked = (likes) => {
         const userLiked = likes.some((like) => like.user_id == auth.user.id);
         return userLiked;
     };
-    console.log(pertanyaans);
 
     return (
         <QuestionLayout
@@ -297,7 +307,7 @@ export default function Question({
                                 />
                                 <div className="mx-1">{pertanyaan.insight}</div>
                             </div>
-                            {userHasBookmarked(pertanyaan.collectors) ? (
+                            {userHasBookmarked(pertanyaan) ? (
                                 <div
                                     className="flex"
                                     onClick={() =>

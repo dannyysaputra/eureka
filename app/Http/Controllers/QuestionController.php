@@ -3,15 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Events\QuestionLiked;
+use App\Models\Dosen;
 use App\Models\Jawaban;
 use App\Models\MataKuliah;
 use App\Models\Pertanyaan;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -47,6 +50,29 @@ class QuestionController extends Controller
             ]);
         });
 
+        // Log::info('Pertanyaans before filter:', $pertanyaans->toArray());
+
+        // if (auth()->check()) {
+        //     $userId = auth()->id();
+        //     $pertanyaans = $pertanyaans->filter(function ($pertanyaan) use ($userId) {
+        //         $collectors = collect($pertanyaan['collectors'] ?? []);
+        //         $dosenCollectors = collect($pertanyaan['dosenCollectors'] ?? []);
+                
+        //         Log::info('Collectors:', $collectors->toArray());
+        //         Log::info('Dosen Collectors:', $dosenCollectors->toArray());
+
+        //         $isCollectedByUser = $collectors->contains('id', $userId);
+        //         $isCollectedByDosen = $dosenCollectors->contains('id', $userId);
+                
+        //         Log::info('Is Collected by User:', ['isCollectedByUser' => $isCollectedByUser]);
+        //         Log::info('Is Collected by Dosen:', ['isCollectedByDosen' => $isCollectedByDosen]);
+
+        //         return $isCollectedByUser || $isCollectedByDosen;
+        //     });
+        // }
+
+        // Log::info('Pertanyaans after filter:', $pertanyaans->toArray());
+
         $topQuestions = Pertanyaan::with(['likes' => function ($query) {
             $query->select('likeable_id', 'user_id');
         }])
@@ -68,13 +94,13 @@ class QuestionController extends Controller
             ->get();
         
         $user = Auth::user();
-        $user->collectedPertanyaans;
+        // $user->collectedPertanyaans;
 
         $photoPath = '/images/nav-bg.png';
         return Inertia::render('Question', [
             'user' => $user,
             'photoPath' => $photoPath,
-            'pertanyaans' => $pertanyaans,
+            'pertanyaans' => $pertanyaans->values(),
             'topCourses' => $topCourses,
             'topQuestions' => $topQuestions
         ]);

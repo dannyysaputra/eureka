@@ -15,7 +15,7 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable 
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasUuids;
 
     /**
      * The attributes that are mass assignable.
@@ -95,6 +95,7 @@ class User extends Authenticatable
 
     public function collectedPertanyaans()
     {
-        return $this->morphedByMany(Pertanyaan::class, 'collectible', 'collections', 'collectible_id', 'pertanyaan_id');
+        return $this->morphedByMany(Pertanyaan::class, 'collectible', 'collections', 'collectible_id', 'pertanyaan_id')
+            ->withPivot('collectible_type');
     }
 }

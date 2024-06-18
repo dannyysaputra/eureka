@@ -38,11 +38,13 @@ class Pertanyaan extends Model
 
     public function collectors()
     {
-        return $this->morphToMany(User::class, 'collectible', 'collections', 'pertanyaan_id', 'collectible_id');
+        return $this->morphToMany(User::class, 'collectible', 'collections', 'pertanyaan_id', 'collectible_id')
+            ->withPivot('collectible_type');
     }
 
     public function dosenCollectors()
     {
-        return $this->morphToMany(Dosen::class, 'collectible', 'collections', 'pertanyaan_id', 'collectible_id');
+        return $this->morphToMany(Dosen::class, 'collectible', 'collections', 'pertanyaan_id', 'collectible_id')
+            ->withPivot('collectible_type');
     }
 }

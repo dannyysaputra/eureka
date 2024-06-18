@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('collections', function (Blueprint $table) {
             $table->id();
             $table->foreignUuid('pertanyaan_id')->constrained('pertanyaans')->onDelete('cascade');
-            $table->morphs('collectible'); // This adds collectible_id and collectible_type columns
+            $table->uuidMorphs('collectible'); // This adds collectible_id and collectible_type columns
             $table->timestamps();
         });
     }

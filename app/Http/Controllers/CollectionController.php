@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Dosen;
 use App\Models\Pertanyaan;
+use App\Models\User;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class CollectionController extends Controller
     {
         $user = Auth::user();
 
-        $pertanyaans = Pertanyaan::whereHas('collectedBy', function ($query) use ($user) {
+        $pertanyaans = Pertanyaan::whereHas('collectors', function ($query) use ($user) {
             $query->where('user_id', $user->id);
         })
         ->with(['likes' => function ($query) {
@@ -52,23 +53,35 @@ class CollectionController extends Controller
     public function addCollection($questionId)
     {
         $user = auth()->user();
+        $user->collectedPertanyaans()->attach($questionId, ['collectible_id' => $user->id]);
     
         // Validasi bahwa pertanyaan ada
-        $pertanyaan = Pertanyaan::findOrFail($questionId);
+        // $pertanyaan = Pertanyaan::findOrFail($questionId);
 
-        if ($user->role === 'dosen') {
-            $dosen = Dosen::find($user->id); 
-            if ($dosen) {
-                $dosen->collectedPertanyaans()->attach($pertanyaan);
-            }
-        } else {
-            $user->collectedPertanyaans()->attach($pertanyaan);
-        }
+        // if ($user->role === 'dosen') {
+        //     $dosen = Dosen::find($user->id); 
+        //     if ($dosen) {
+        //         $dosen->collectedPertanyaans()->attach($pertanyaan);
+        //     }
+        // } else {
+        //     $mahasiswa = User::find($user->id);
+        //     $mahasiswa->collectedPertanyaans()->attach($pertanyaan);
+        // }
     }
 
     // Menghapus Collection
     public function removeCollection($questionId)
     {
-        auth()->user()->collectedPertanyaans()->detach($questionId);
+        $user = auth()->user();
+    
+        if ($user->role === 'dosen') {
+            $dosen = Dosen::find($user->id);
+            if ($dosen) {
+                $dosen->collectedPertanyaans()->detach($questionId);
+            }
+        } else {
+            $mahasiswa = User::find($user->id);
+            $mahasiswa->collectedPertanyaans()->detach($questionId);
+        }
     }
 }

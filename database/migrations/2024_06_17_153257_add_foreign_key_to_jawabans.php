@@ -12,15 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('jawabans', function (Blueprint $table) {
-            // Drop the existing foreign key and column for user_id
-            $table->dropForeign(['user_id']);
-            $table->dropColumn('user_id');
-        });
-
-        Schema::table('jawabans', function (Blueprint $table) {
             // Add the nullable user_id and dosen_id columns
-            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
-            $table->foreignId('dosen_id')->nullable()->constrained('dosens')->onDelete('cascade');
+            $table->foreignUuid('user_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignUuid('dosen_id')->nullable()->constrained('dosens')->onDelete('cascade');
         });
     }
 
@@ -34,11 +28,6 @@ return new class extends Migration
             $table->dropForeign(['user_id']);
             $table->dropForeign(['dosen_id']);
             $table->dropColumn(['user_id', 'dosen_id']);
-        });
-
-        Schema::table('jawabans', function (Blueprint $table) {
-            // Recreate the original user_id column
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
         });
     }
 };
