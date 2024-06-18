@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Dosen;
 use App\Models\Jawaban;
 use App\Models\Jurusan;
 use App\Models\Pertanyaan;
@@ -23,13 +24,9 @@ class ProfileController extends Controller
         $user->pertanyaan;
         $user->jawabans;
 
-        // dd($user);
-
         $photoPath = '/images/nav-bg.png';
 
         return Inertia::render('Profile', [
-            // 'pertanyaans', $pertanyaans,
-            // 'jawabans', $jawabans,
             'user' => $user,
             'jurusan' => $jurusan,
             'photoPath' => $photoPath,
@@ -60,15 +57,32 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = Auth::user();
+        $data = $request->validated();
+        // dd($data);
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $user->jurusan_id = (int) $data['jurusanId'];
+
+        if ($user->role === 'dosen') {
+            $user->nip = $data['nip'] ?? $user->nip;
+        } else {
+            $user->nim = $data['nim'] ?? $user->nim;
+            $user->angkatan = $data['angkatan'] ?? $user->angkatan;
         }
 
-        $request->user()->save();
+        $user->fill($data);
 
-        return Redirect::route('profile.edit');
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
+
+        if ($user->role === 'dosen') {
+            return Redirect::route('dosen.profile.edit')->with('status', 'Profile updated!');
+        } else {
+            return Redirect::route('profile.edit')->with('status', 'Profile updated!');
+        }
     }
 
     /**

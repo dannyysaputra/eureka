@@ -6,6 +6,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 
 export default function EditProfile({ auth, photoPath, jurusans }) {
     const user = auth.user;
+    const isDosen = user.role === "dosen";
 
     const { data, setData, put, processing, errors, reset } = useForm({
         name: user.name,
@@ -13,16 +14,39 @@ export default function EditProfile({ auth, photoPath, jurusans }) {
         nim: user.nim,
         angkatan: user.angkatan,
         jurusanId: user.jurusan_id,
-        password: "",
-        password_confirmation: "",
+        // password: user.password,
+        // password_confirmation: "",
+    });
+
+    const {
+        data: dataDosen,
+        setData: setDataDosen,
+        put: putDosen,
+        processing: processingDosen,
+        errors: errorsDosen,
+        reset: resetDosen,
+    } = useForm({
+        name: user.name,
+        email: user.email,
+        nip: user.nip,
+        jurusanId: user.jurusan_id,
+        // password: user.password,
+        // password_confirmation: "",
     });
 
     const submit = (e) => {
         e.preventDefault();
-        console.log(data);
 
-        put(route("profile.update"));
+        if (isDosen) {
+            console.log(dataDosen);
+            putDosen(route("dosen.profile.update"));
+        } else {
+            put(route("profile.update"));
+        }
     };
+
+    // console.log(dataDosen);
+    // console.log(data);
 
     return (
         <MainLayout user={auth.user} photoPath={photoPath}>
@@ -56,38 +80,61 @@ export default function EditProfile({ auth, photoPath, jurusans }) {
                                 <TextInput
                                     id="name"
                                     name="name"
-                                    value={data.name}
+                                    value={isDosen ? dataDosen.name : data.name}
                                     className="mt-1 block w-full rounded-none border-none shadow-none text-green-600"
                                     autoComplete="name"
                                     isFocused={true}
-                                    onChange={(e) =>
-                                        setData("name", e.target.value)
+                                    onChange={
+                                        isDosen
+                                            ? (e) =>
+                                                  setDataDosen(
+                                                      "name",
+                                                      e.target.value
+                                                  )
+                                            : (e) =>
+                                                  setData(
+                                                      "name",
+                                                      e.target.value
+                                                  )
                                     }
                                     required
                                 />
 
                                 <InputError
-                                    message={errors.name}
+                                    message={
+                                        isDosen ? errorsDosen.name : errors.name
+                                    }
                                     className="mt-2"
                                 />
                             </div>
                             <div className="font-semibold mb-4">
-                                <p className="text-xl">NIM</p>
+                                <p className="text-xl">
+                                    {isDosen ? "NIP" : "NIM"}
+                                </p>
                                 <TextInput
-                                    id="nim"
-                                    name="nim"
-                                    value={data.nim}
+                                    id={isDosen ? "nip" : "nim"}
+                                    name={isDosen ? "nip" : "nim"}
+                                    value={isDosen ? dataDosen.nip : data.nim}
                                     className="mt-1 block w-full rounded-none border-none shadow-none text-green-600"
-                                    autoComplete="nim"
+                                    autoComplete={isDosen ? "nip" : "nim"}
                                     isFocused={true}
-                                    onChange={(e) =>
-                                        setData("nim", e.target.value)
+                                    onChange={
+                                        isDosen
+                                            ? (e) =>
+                                                  setDataDosen(
+                                                      "nip",
+                                                      e.target.value
+                                                  )
+                                            : (e) =>
+                                                  setData("nim", e.target.value)
                                     }
                                     required
                                 />
 
                                 <InputError
-                                    message={errors.nim}
+                                    message={
+                                        isDosen ? errorsDosen.nip : errors.nim
+                                    }
                                     className="mt-2"
                                 />
                             </div>
@@ -96,18 +143,34 @@ export default function EditProfile({ auth, photoPath, jurusans }) {
                                 <TextInput
                                     id="email"
                                     name="email"
-                                    value={data.email}
+                                    value={
+                                        isDosen ? dataDosen.email : data.email
+                                    }
                                     className="mt-1 block w-full rounded-none border-none shadow-none text-green-600"
                                     autoComplete="email"
                                     isFocused={true}
-                                    onChange={(e) =>
-                                        setData("email", e.target.value)
+                                    onChange={
+                                        isDosen
+                                            ? (e) =>
+                                                  setDataDosen(
+                                                      "email",
+                                                      e.target.value
+                                                  )
+                                            : (e) =>
+                                                  setData(
+                                                      "email",
+                                                      e.target.value
+                                                  )
                                     }
                                     required
                                 />
 
                                 <InputError
-                                    message={errors.email}
+                                    message={
+                                        isDosen
+                                            ? errorsDosen.email
+                                            : errors.email
+                                    }
                                     className="mt-2"
                                 />
                             </div>
@@ -116,9 +179,23 @@ export default function EditProfile({ auth, photoPath, jurusans }) {
                                 <select
                                     id="jurusan"
                                     name="jurusanId"
-                                    value={data.jurusanId}
-                                    onChange={(e) =>
-                                        setData("jurusanId", e.target.value)
+                                    value={
+                                        isDosen
+                                            ? dataDosen.jurusanId
+                                            : data.jurusanId
+                                    }
+                                    onChange={
+                                        isDosen
+                                            ? (e) =>
+                                                  setDataDosen(
+                                                      "jurusanId",
+                                                      e.target.value
+                                                  )
+                                            : (e) =>
+                                                  setData(
+                                                      "jurusanId",
+                                                      e.target.value
+                                                  )
                                     }
                                     className="p-2 focus:border-indigo-500 shadow-sm block w-full border-none focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                     required
@@ -135,34 +212,40 @@ export default function EditProfile({ auth, photoPath, jurusans }) {
                                 </select>
 
                                 <InputError
-                                    // message={errors.jurusan}
-                                    className="mt-2"
-                                />
-                            </div>
-                            <div className="font-semibold mb-4">
-                                <p className="text-xl">Angkatan</p>
-                                <TextInput
-                                    id="angkatan"
-                                    name="angkatan"
-                                    value={data.angkatan}
-                                    className="mt-1 block w-full rounded-none border-none shadow-none text-green-600"
-                                    autoComplete="angkatan"
-                                    isFocused={true}
-                                    onChange={(e) =>
-                                        setData("angkatan", e.target.value)
+                                    message={
+                                        isDosen
+                                            ? errorsDosen.jurusanId
+                                            : errors.jurusanId
                                     }
-                                    required
-                                />
-
-                                <InputError
-                                    message={errors.angkatan}
                                     className="mt-2"
                                 />
                             </div>
+                            {!isDosen && (
+                                <div className="font-semibold mb-4">
+                                    <p className="text-xl">Angkatan</p>
+                                    <TextInput
+                                        id="angkatan"
+                                        name="angkatan"
+                                        value={data.angkatan}
+                                        className="mt-1 block w-full rounded-none border-none shadow-none text-green-600"
+                                        autoComplete="angkatan"
+                                        isFocused={true}
+                                        onChange={(e) =>
+                                            setData("angkatan", e.target.value)
+                                        }
+                                        required
+                                    />
+
+                                    <InputError
+                                        message={errors.angkatan}
+                                        className="mt-2"
+                                    />
+                                </div>
+                            )}
                             <div className="my-auto">
                                 <PrimaryButton
                                     className="rounded-none mt-4 bg-green-600"
-                                    disabled={processing}
+                                    disabled={isDosen ? processingDosen : processing}
                                 >
                                     Gabung sekarang!
                                 </PrimaryButton>
