@@ -107,7 +107,7 @@ export default function QuestionLayout({
                                     </div>
                                 </div>
                             </Link>
-                            <Link href="/koleksi">
+                            <Link href={isDosen ? '/dosen/koleksi' : '/koleksi'}>
                                 <div className="flex flex-row my-2">
                                     <div>
                                         <i class="fa-regular fa-star fa-xl"></i>

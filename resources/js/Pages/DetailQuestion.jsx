@@ -115,11 +115,19 @@ export default function DetailQuestion({
     };
 
     const handleBookmark = (questionId) => {
-        post(`/pertanyaan/${questionId}/add-collection`);
+        if (isDosen) {
+            post(`/dosen/pertanyaan/${questionId}/add-collection`);
+        } else {
+            post(`/pertanyaan/${questionId}/add-collection`);
+        }
     };
 
     const handleUnbookmark = (questionId) => {
-        post(`/pertanyaan/${questionId}/remove-collection`);
+        if (isDosen) {
+            post(`/dosen/pertanyaan/${questionId}/remove-collection`);
+        } else {
+            post(`/pertanyaan/${questionId}/remove-collection`);
+        }
     };
 
     const handleValidate = (answerId) => {
@@ -135,11 +143,23 @@ export default function DetailQuestion({
         return userLiked;
     };
 
-    const userHasBookmarked = (bookmarks) => {
-        const userBookmark = bookmarks.some(
-            (bookmark) => bookmark.id == auth.user.id
-        );
-        return userBookmark;
+    const userHasBookmarked = (pertanyaan) => {
+        let found = false;
+        const userId = auth.user.id;
+        const userRole = auth.user.role;
+
+        if (pertanyaan.collectors && userRole === 'mahasiswa') {
+            found = pertanyaan.collectors.some(
+                (collector) => collector.id === userId
+            );
+        }
+        if (pertanyaan.dosen_collectors && userRole === 'dosen') {
+            found = pertanyaan.dosen_collectors.some(
+                (dosenCollector) => dosenCollector.id === userId
+            );
+        }
+
+        return found;
     };
 
     console.log(answers);
@@ -156,7 +176,7 @@ export default function DetailQuestion({
         >
             <Head title={pertanyaan.judul} />
             <div className="my-6 mx-10">
-                <Link href={route("pertanyaan")} className="my-auto">
+                <Link href={isDosen ? route("dosen.pertanyaan") : route("pertanyaan")} className="my-auto">
                     <ArrowButton fillColor={"#02AF91"}></ArrowButton>
                 </Link>
             </div>
@@ -191,7 +211,7 @@ export default function DetailQuestion({
                         </div>
                     </div>
                     <div className="p-2">
-                        {userHasBookmarked(pertanyaan.collected_by) ? (
+                        {userHasBookmarked(pertanyaan) ? (
                             <div
                                 className="flex"
                                 onClick={() => handleUnbookmark(pertanyaan.id)}

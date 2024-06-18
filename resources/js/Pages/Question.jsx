@@ -45,7 +45,13 @@ export default function Question({
         const listener = ({ question }) => {
             setQuestions((prevQuestions) =>
                 prevQuestions.map((q) =>
-                    q.id === question.id ? { ...q, likes: question.likes } : q
+                    q.id === question.id
+                        ? {
+                              ...q,
+                              likes: question.likes,
+                              is_validated: question.is_validated,
+                          }
+                        : q
                 )
             );
         };
@@ -121,12 +127,12 @@ export default function Question({
         const userId = auth.user.id;
         const userRole = auth.user.role;
 
-        if (pertanyaan.collectors && userRole === 'mahasiswa') {
+        if (pertanyaan.collectors && userRole === "mahasiswa") {
             found = pertanyaan.collectors.some(
                 (collector) => collector.id === userId
             );
         }
-        if (pertanyaan.dosen_collectors && userRole === 'dosen') {
+        if (pertanyaan.dosen_collectors && userRole === "dosen") {
             found = pertanyaan.dosen_collectors.some(
                 (dosenCollector) => dosenCollector.id === userId
             );

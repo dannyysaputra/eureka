@@ -162,7 +162,7 @@ class QuestionController extends Controller
 
     public function show($id): Response
     {
-        $pertanyaan = Pertanyaan::with(['user.jurusan', 'collectedBy'])
+        $pertanyaan = Pertanyaan::with(['user.jurusan', 'collectors', 'dosenCollectors'])
             ->where('pertanyaans.id', $id)
             ->join('users', 'pertanyaans.user_id', '=', 'users.id')
             ->join('jurusans', 'users.jurusan_id', '=', 'jurusans.id')

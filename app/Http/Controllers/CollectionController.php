@@ -17,15 +17,28 @@ class CollectionController extends Controller
     {
         $user = Auth::user();
 
-        $pertanyaans = Pertanyaan::whereHas('collectors', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
+        // Query untuk collectors (User)
+        $pertanyaansFromCollectors = Pertanyaan::whereHas('collectors', function ($query) use ($user) {
+            $query->where('users.id', $user->id);
         })
         ->with(['likes' => function ($query) {
             $query->select('likeable_id', 'user_id');
-        }, 'mataKuliah'])
+        }, 'mataKuliah', 'collectors', 'dosenCollectors'])
         ->withCount('jawabans')
-        ->get()
-        ->map(function ($pertanyaan) {  
+        ->get();
+
+        // Query untuk dosenCollectors (Dosen)
+        $pertanyaansFromDosenCollectors = Pertanyaan::whereHas('dosenCollectors', function ($query) use ($user) {
+            $query->where('dosens.id', $user->id);
+        })
+        ->with(['likes' => function ($query) {
+            $query->select('likeable_id', 'user_id');
+        }, 'mataKuliah', 'collectors', 'dosenCollectors'])
+        ->withCount('jawabans')
+        ->get();
+
+        // Gabungkan hasil query
+        $pertanyaans = $pertanyaansFromCollectors->merge($pertanyaansFromDosenCollectors)->map(function ($pertanyaan) {
             $deskripsi = Str::limit(strip_tags($pertanyaan->deskripsi), 100); // Hanya ambil 100 karakter
 
             // Hitung waktu yang sudah berlalu

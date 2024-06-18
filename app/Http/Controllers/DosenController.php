@@ -18,7 +18,6 @@ class DosenController extends Controller
 
         if (Auth::guard('dosens')->attempt($credentials)) {
             $request->session()->regenerate();
-            // dd(session()->all());
             return redirect()->intended(route('dosen.pertanyaan'));
         }
 

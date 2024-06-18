@@ -32,6 +32,7 @@ export default function Login({
 
         const emailPattern = /^[^\s@]+@uinsgd\.ac\.id$/;
         const isDosenEmail = emailPattern.test(data.email);
+        console.log(isDosenEmail);
 
         if (isDosenEmail) {
             post(route("login-dosen"));

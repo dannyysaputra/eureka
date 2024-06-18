@@ -39,7 +39,7 @@ export default function MainLayout({ user, header, photoPath, children }) {
                 <div className="flex justify-between items-center lg:px-8 lg:pt-6">
                     <EurekaLogo></EurekaLogo>
                     <div className="flex gap-5">
-                        <Link href="/pertanyaan">
+                        <Link href={isDosen ? '/dosen/pertanyaan' : '/pertanyaan'}>
                             <div className="text-lg font-black text-black">
                                 Pertanyaan
                             </div>
