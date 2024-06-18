@@ -36,8 +36,15 @@ class Pertanyaan extends Model
         return $this->hasMany(Jawaban::class);
     }
 
-    public function collectedBy()
+    public function collectors()
     {
-        return $this->belongsToMany(User::class, 'collections', 'pertanyaan_id', 'user_id');
+        return $this->morphToMany(User::class, 'collectible', 'collections', 'pertanyaan_id', 'collectible_id')
+            ->withPivot('collectible_type');
+    }
+
+    public function dosenCollectors()
+    {
+        return $this->morphToMany(Dosen::class, 'collectible', 'collections', 'pertanyaan_id', 'collectible_id')
+            ->withPivot('collectible_type');
     }
 }

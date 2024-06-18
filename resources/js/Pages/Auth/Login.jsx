@@ -30,7 +30,15 @@ export default function Login({
     const submit = (e) => {
         e.preventDefault();
 
-        post(route("login"));
+        const emailPattern = /^[^\s@]+@uinsgd\.ac\.id$/;
+        const isDosenEmail = emailPattern.test(data.email);
+        console.log(isDosenEmail);
+
+        if (isDosenEmail) {
+            post(route("login-dosen"));
+        } else {
+            post(route("login"));
+        }
     };
 
     const formBackgroundStyle = {
@@ -63,7 +71,7 @@ export default function Login({
                 <div className="flex-auto w-32">
                     <div className="flex justify-between mx-3">
                         <Link href={route("welcome")} className="my-auto">
-                            <ArrowButton fillColor={'white'}></ArrowButton>
+                            <ArrowButton fillColor={"white"}></ArrowButton>
                         </Link>
                         <img src="/images/saintek.png" alt="" />
                     </div>
@@ -152,7 +160,7 @@ export default function Login({
 
                             <div className="flex items-center mt-8">
                                 <PrimaryButton
-                                    className=""
+                                    className="w-full"
                                     disabled={processing}
                                 >
                                     Log in

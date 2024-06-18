@@ -5,6 +5,8 @@ import { Head, Link } from "@inertiajs/react";
 
 export default function Collection({ auth, photoPath, pertanyaans }) {
     console.log(pertanyaans);
+    const isDosen = auth.user.role === 'dosen';
+    // const questionCollection = isDosen ? dosenQuestions : userQuestions;
 
     const [questions, setQuestions] = useState(pertanyaans || []);
     const [sortByDate, setSortByDate] = useState(false);
@@ -115,7 +117,7 @@ export default function Collection({ auth, photoPath, pertanyaans }) {
                         className="rounded-lg border  w-screen h-auto"
                         style={{ backgroundColor: "#02AF91" }}
                     >
-                        <Link href={`/detail-pertanyaan/${pertanyaan.id}`}>
+                        <Link href={isDosen ? `/dosen/detail-pertanyaan/${pertanyaan.id}` : `/detail-pertanyaan/${pertanyaan.id}`}>
                             <div className="flex justify-between my-8">
                                 <div className="font-bold mx-6">
                                     {pertanyaan.judul}

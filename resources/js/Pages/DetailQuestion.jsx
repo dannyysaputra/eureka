@@ -16,6 +16,8 @@ export default function DetailQuestion({
     jawabans,
 }) {
     const [answers, setAnswers] = useState(jawabans || []);
+    const isDosen = auth.user.role === "dosen";
+    const isUserQuestion = !isDosen && pertanyaan.user_id == auth.user.id;
 
     useEffect(() => {
         if (!window.Echo) {
@@ -60,28 +62,50 @@ export default function DetailQuestion({
         pertanyaanId: pertanyaan.id,
     });
 
-    const { data: updateData, setData: setUpdateData, put, processing: updateProcessing, errors: updateErrors, reset: resetUpdate } = useForm({
+    const {
+        data: updateData,
+        setData: setUpdateData,
+        put,
+        processing: updateProcessing,
+        errors: updateErrors,
+        reset: resetUpdate,
+    } = useForm({
         deskripsiJawaban: data.deskripsiJawaban,
     });
 
     const submit = (e) => {
         e.preventDefault();
 
-        post(route("submit-jawaban"));
+        if (isDosen) {
+            post(route("dosen.submit-jawaban"));
+        } else {
+            post(route("submit-jawaban"));
+        }
     };
 
     const handleDelete = async (id) => {
-        Inertia.delete(`/jawaban/${id}`);
+        if (isDosen) {
+            Inertia.delete(`/dosen/jawaban/${id}`);
+        } else {
+            Inertia.delete(`/jawaban/${id}`);
+        }
     };
 
     const handleUpdate = (id, updatedContent) => {
         setUpdateData("deskripsiJawaban", updatedContent);
-        put(route("jawaban.update", id), {
+
+        const routeName = isDosen ? "dosen.jawaban.update" : "jawaban.update";
+
+        put(route(routeName, id), {
             preserveScroll: true,
             onSuccess: (response) => {
-                setAnswers(answers.map(answer => 
-                    answer.id === id ? { ...answer, deskripsi_jawaban: updatedContent } : answer
-                ));
+                setAnswers(
+                    answers.map((answer) =>
+                        answer.id === id
+                            ? { ...answer, deskripsi_jawaban: updatedContent }
+                            : answer
+                    )
+                );
             },
         });
     };
@@ -91,15 +115,27 @@ export default function DetailQuestion({
     };
 
     const handleBookmark = (questionId) => {
-        post(`/pertanyaan/${questionId}/add-collection`);
+        if (isDosen) {
+            post(`/dosen/pertanyaan/${questionId}/add-collection`);
+        } else {
+            post(`/pertanyaan/${questionId}/add-collection`);
+        }
     };
 
     const handleUnbookmark = (questionId) => {
-        post(`/pertanyaan/${questionId}/remove-collection`);
+        if (isDosen) {
+            post(`/dosen/pertanyaan/${questionId}/remove-collection`);
+        } else {
+            post(`/pertanyaan/${questionId}/remove-collection`);
+        }
     };
 
     const handleValidate = (answerId) => {
-        post(`/jawaban/${answerId}/validate`);
+        if (isDosen) {
+            post(`/dosen/jawaban/${answerId}/validate`);
+        } else {
+            post(`/jawaban/${answerId}/validate`);
+        }
     };
 
     const userHasLiked = (likes) => {
@@ -107,14 +143,26 @@ export default function DetailQuestion({
         return userLiked;
     };
 
-    const userHasBookmarked = (bookmarks) => {
-        const userBookmark = bookmarks.some(
-            (bookmark) => bookmark.id == auth.user.id
-        );
-        return userBookmark;
+    const userHasBookmarked = (pertanyaan) => {
+        let found = false;
+        const userId = auth.user.id;
+        const userRole = auth.user.role;
+
+        if (pertanyaan.collectors && userRole === 'mahasiswa') {
+            found = pertanyaan.collectors.some(
+                (collector) => collector.id === userId
+            );
+        }
+        if (pertanyaan.dosen_collectors && userRole === 'dosen') {
+            found = pertanyaan.dosen_collectors.some(
+                (dosenCollector) => dosenCollector.id === userId
+            );
+        }
+
+        return found;
     };
 
-    const isUserQuestion = pertanyaan.user_id === auth.user.id;
+    console.log(answers);
 
     return (
         <DetailQuestionLayout
@@ -128,12 +176,12 @@ export default function DetailQuestion({
         >
             <Head title={pertanyaan.judul} />
             <div className="my-6 mx-10">
-                <Link href={route("pertanyaan")} className="my-auto">
+                <Link href={isDosen ? route("dosen.pertanyaan") : route("pertanyaan")} className="my-auto">
                     <ArrowButton fillColor={"#02AF91"}></ArrowButton>
                 </Link>
             </div>
             <div
-                className="rounded-lg mx-12 my-8 h-auto"
+                className="rounded-lg mx-12 my-8 h-auto pb-3"
                 style={{ backgroundColor: "#02AF91" }}
             >
                 <div className="flex flex-row p-4 ml-3">
@@ -163,7 +211,7 @@ export default function DetailQuestion({
                         </div>
                     </div>
                     <div className="p-2">
-                        {userHasBookmarked(pertanyaan.collected_by) ? (
+                        {userHasBookmarked(pertanyaan) ? (
                             <div
                                 className="flex"
                                 onClick={() => handleUnbookmark(pertanyaan.id)}
@@ -189,20 +237,19 @@ export default function DetailQuestion({
                         Komentar
                     </div>
                 </div>
-                {!(pertanyaan.user_id == auth.user.id) && (
+                {!isUserQuestion && (
                     <form onSubmit={submit}>
-                        <div
-                            className="flex flex-col"
-                            style={{ backgroundColor: "#F3F4F6" }}
-                        >
-                            <div className="mt-5 h-auto flex-grow">
-                                <RichTextEditor
-                                    name="deskripsiJawaban"
-                                    value={data.deskripsiJawaban}
-                                    onChange={(content) =>
-                                        setData("deskripsiJawaban", content)
-                                    }
-                                />
+                        <div className="flex flex-col mx-5">
+                            <div className="mt-5 h-auto flex-grow bg-white">
+                                <div className="h-auto flex-grow">
+                                    <RichTextEditor
+                                        name="deskripsiJawaban"
+                                        value={data.deskripsiJawaban}
+                                        onChange={(content) =>
+                                            setData("deskripsiJawaban", content)
+                                        }
+                                    />
+                                </div>
                             </div>
                             <PrimaryButton
                                 disabled={processing}
@@ -218,8 +265,8 @@ export default function DetailQuestion({
             {answers.map((jawaban) => (
                 <JawabanCard
                     jawaban={jawaban}
-                    isUserQuestion={isUserQuestion}
                     auth={auth}
+                    pertanyaanUserId={pertanyaan.user_id}
                     formatDate={formatDate}
                     handleValidate={handleValidate}
                     handleLike={handleLike}

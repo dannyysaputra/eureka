@@ -3,15 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Events\QuestionLiked;
+use App\Models\Dosen;
 use App\Models\Jawaban;
 use App\Models\MataKuliah;
 use App\Models\Pertanyaan;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -23,7 +26,7 @@ class QuestionController extends Controller
 
         $pertanyaans = Pertanyaan::with(['likes' => function ($query) {
             $query->select('likeable_id', 'user_id');
-        }, 'mataKuliah', 'collectedBy'])
+        }, 'mataKuliah', 'collectors', 'dosenCollectors'])
         ->withCount('jawabans')
         ->when($search, function ($query, $search) {
             return $query->where('pertanyaans.judul', 'like', "%{$search}%")
@@ -47,6 +50,29 @@ class QuestionController extends Controller
             ]);
         });
 
+        // Log::info('Pertanyaans before filter:', $pertanyaans->toArray());
+
+        // if (auth()->check()) {
+        //     $userId = auth()->id();
+        //     $pertanyaans = $pertanyaans->filter(function ($pertanyaan) use ($userId) {
+        //         $collectors = collect($pertanyaan['collectors'] ?? []);
+        //         $dosenCollectors = collect($pertanyaan['dosenCollectors'] ?? []);
+                
+        //         Log::info('Collectors:', $collectors->toArray());
+        //         Log::info('Dosen Collectors:', $dosenCollectors->toArray());
+
+        //         $isCollectedByUser = $collectors->contains('id', $userId);
+        //         $isCollectedByDosen = $dosenCollectors->contains('id', $userId);
+                
+        //         Log::info('Is Collected by User:', ['isCollectedByUser' => $isCollectedByUser]);
+        //         Log::info('Is Collected by Dosen:', ['isCollectedByDosen' => $isCollectedByDosen]);
+
+        //         return $isCollectedByUser || $isCollectedByDosen;
+        //     });
+        // }
+
+        // Log::info('Pertanyaans after filter:', $pertanyaans->toArray());
+
         $topQuestions = Pertanyaan::with(['likes' => function ($query) {
             $query->select('likeable_id', 'user_id');
         }])
@@ -67,11 +93,14 @@ class QuestionController extends Controller
             ->limit(5)
             ->get();
         
+        $user = Auth::user();
+        // $user->collectedPertanyaans;
 
         $photoPath = '/images/nav-bg.png';
         return Inertia::render('Question', [
+            'user' => $user,
             'photoPath' => $photoPath,
-            'pertanyaans' => $pertanyaans,
+            'pertanyaans' => $pertanyaans->values(),
             'topCourses' => $topCourses,
             'topQuestions' => $topQuestions
         ]);
@@ -133,7 +162,7 @@ class QuestionController extends Controller
 
     public function show($id): Response
     {
-        $pertanyaan = Pertanyaan::with(['user.jurusan', 'collectedBy'])
+        $pertanyaan = Pertanyaan::with(['user.jurusan', 'collectors', 'dosenCollectors'])
             ->where('pertanyaans.id', $id)
             ->join('users', 'pertanyaans.user_id', '=', 'users.id')
             ->join('jurusans', 'users.jurusan_id', '=', 'jurusans.id')
@@ -148,9 +177,17 @@ class QuestionController extends Controller
             ->with(['likes' => function ($query) {
                 $query->select('likeable_id', 'user_id');
             }])
-            ->join('users', 'jawabans.user_id', '=', 'users.id')
-            ->join('jurusans', 'users.jurusan_id', '=', 'jurusans.id')
-            ->select('jawabans.*', 'users.name as user_name', 'jurusans.nama_jurusan as jurusan_name')
+            ->leftJoin('users', 'jawabans.user_id', '=', 'users.id')
+            ->leftJoin('dosens', 'jawabans.dosen_id', '=', 'dosens.id')
+            ->leftJoin('jurusans as user_jurusan', 'users.jurusan_id', '=', 'user_jurusan.id')
+            ->leftJoin('jurusans as dosen_jurusan', 'dosens.jurusan_id', '=', 'dosen_jurusan.id')
+            ->select(
+                'jawabans.*', 
+                'users.name as user_name', 
+                'user_jurusan.nama_jurusan as user_jurusan_name', 
+                'dosens.name as dosen_name',
+                'dosen_jurusan.nama_jurusan as dosen_jurusan_name'
+            )
             ->get();
 
         $photoPath = '/images/nav-bg.png';

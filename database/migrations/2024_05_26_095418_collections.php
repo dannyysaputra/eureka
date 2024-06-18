@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('collections', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignUuid('pertanyaan_id')->constrained('pertanyaans')->onDelete('cascade');
+            $table->uuidMorphs('collectible'); // This adds collectible_id and collectible_type columns
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('collections');
     }
 };

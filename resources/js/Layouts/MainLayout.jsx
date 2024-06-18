@@ -27,13 +27,19 @@ export default function MainLayout({ user, header, photoPath, children }) {
         color: "white",
     };
 
+    let isDosen;
+
+    if (user) {
+        isDosen = user.role == "dosen";
+    }
+
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
             <nav style={navbarStyle}>
                 <div className="flex justify-between items-center lg:px-8 lg:pt-6">
                     <EurekaLogo></EurekaLogo>
                     <div className="flex gap-5">
-                        <Link href="/pertanyaan">
+                        <Link href={isDosen ? '/dosen/pertanyaan' : '/pertanyaan'}>
                             <div className="text-lg font-black text-black">
                                 Pertanyaan
                             </div>
@@ -49,7 +55,6 @@ export default function MainLayout({ user, header, photoPath, children }) {
                                             className="inline-flex items-center px-3 py-2 border border-transparent leading-4 font-medium rounded-md text-black dark:text-gray-400 dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150"
                                         >
                                             {user.name}
-
                                             <svg
                                                 className="ms-2 -me-0.5 h-4 w-4"
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -71,7 +76,11 @@ export default function MainLayout({ user, header, photoPath, children }) {
                                         Profile
                                     </Dropdown.Link>
                                     <Dropdown.Link
-                                        href={route("logout")}
+                                        href={
+                                            isDosen
+                                                ? route("dosen.logout")
+                                                : route("logout")
+                                        }
                                         method="post"
                                         as="button"
                                     >

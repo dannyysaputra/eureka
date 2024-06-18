@@ -3,8 +3,12 @@ import ArrowButton from "@/Components/ArrowButton";
 import Medal from "@/Components/Medal";
 import { Head, Link } from "@inertiajs/react";
 
-export default function DetailQuestion({ auth, photoPath, users, userPosition }) {
-    console.log(userPosition);
+export default function Leaderboard({
+    auth,
+    photoPath,
+    users,
+    userPosition,
+}) {
     const user = auth.user;
 
     return (
@@ -73,9 +77,7 @@ export default function DetailQuestion({ auth, photoPath, users, userPosition })
                                 </div>
                             </div>
                             <div className="flex">
-                                <div className="font-semibold">
-                                    {user.rank}
-                                </div>
+                                <div className="font-semibold">{user.rank}</div>
                                 <div className="mx-3"> - </div>
                                 <div>{user.points} pts</div>
                             </div>

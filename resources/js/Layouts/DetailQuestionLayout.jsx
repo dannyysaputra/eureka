@@ -20,6 +20,7 @@ export default function DetailQuestionLayout({
         height: "90px",
         color: "white",
     };
+    const isDosen = user.role == "dosen";
 
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -65,7 +66,11 @@ export default function DetailQuestionLayout({
                                         Pertanyaan Saya
                                     </Dropdown.Link>
                                     <Dropdown.Link
-                                        href={route("logout")}
+                                        href={
+                                            isDosen
+                                                ? route("dosen.logout")
+                                                : route("logout")
+                                        }
                                         method="post"
                                         as="button"
                                     >
@@ -111,7 +116,7 @@ export default function DetailQuestionLayout({
                                 </div>
                             </Link>
 
-                            <Link href="/profile">
+                            <Link href={isDosen ? '/dosen/profile' : '/profile'}>
                                 <div className="flex flex-row my-2 ms-1">
                                     <div>
                                         <i class="fa-solid fa-user fa-xl"></i>
@@ -121,17 +126,25 @@ export default function DetailQuestionLayout({
                                     </div>
                                 </div>
                             </Link>
-                            <Link href="/ajukan-pertanyaan">
-                                <div className="flex flex-row my-2">
-                                    <div>
-                                        <i class="fa-regular fa-circle-question fa-xl"></i>
+                            {!isDosen && (
+                                <Link href="/ajukan-pertanyaan">
+                                    <div className="flex flex-row my-2">
+                                        <div>
+                                            <i class="fa-regular fa-circle-question fa-xl"></i>
+                                        </div>
+                                        <div className="font-bold text-xl ms-3">
+                                            Ajukan Pertanyaan
+                                        </div>
                                     </div>
-                                    <div className="font-bold text-xl ms-3">
-                                        Ajukan Pertanyaan
-                                    </div>
-                                </div>
-                            </Link>
-                            <Link href="/leaderboard">
+                                </Link>
+                            )}
+                            <Link
+                                href={
+                                    isDosen
+                                        ? "/dosen/leaderboard"
+                                        : "/leaderboard"
+                                }
+                            >
                                 <div className="flex flex-row my-2">
                                     <div>
                                         <i class="fa-solid fa-chart-simple fa-xl"></i>

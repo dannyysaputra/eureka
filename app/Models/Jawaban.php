@@ -28,4 +28,9 @@ class Jawaban extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function dosen(): BelongsTo
+    {
+        return $this->belongsTo(Dosen::class);
+    }
 }

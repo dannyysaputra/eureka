@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Observers\UserObserver;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -14,22 +15,15 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable 
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasUuids;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'nim',
-        'angkatan',
-        'jurusan_id',
-        'password',
-        'social_id',
-        'social_type'
+    protected $guarded = [
+        'id'
     ];
 
     /**
@@ -68,10 +62,10 @@ class User extends Authenticatable
         $this->save();
     }
 
-    // public function getRankAttribute()
-    // {
-    //     return $this->rank; // Assuming `rank` is stored as the calculated level
-    // }
+    public function minusPoints($points) {
+        $this->points -= $points;
+        $this->save();
+    }
 
     public function getRankPositionAttribute()
     {
@@ -99,8 +93,9 @@ class User extends Authenticatable
         return $this->hasMany(Jawaban::class);
     }
 
-    public function collections()
+    public function collectedPertanyaans()
     {
-        return $this->belongsToMany(Pertanyaan::class, 'collections');
+        return $this->morphedByMany(Pertanyaan::class, 'collectible', 'collections', 'collectible_id', 'pertanyaan_id')
+            ->withPivot('collectible_type');
     }
 }

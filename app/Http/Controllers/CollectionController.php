@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dosen;
 use App\Models\Pertanyaan;
+use App\Models\User;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -15,15 +17,28 @@ class CollectionController extends Controller
     {
         $user = Auth::user();
 
-        $pertanyaans = Pertanyaan::whereHas('collectedBy', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
+        // Query untuk collectors (User)
+        $pertanyaansFromCollectors = Pertanyaan::whereHas('collectors', function ($query) use ($user) {
+            $query->where('users.id', $user->id);
         })
         ->with(['likes' => function ($query) {
             $query->select('likeable_id', 'user_id');
-        }, 'mataKuliah'])
+        }, 'mataKuliah', 'collectors', 'dosenCollectors'])
         ->withCount('jawabans')
-        ->get()
-        ->map(function ($pertanyaan) {  
+        ->get();
+
+        // Query untuk dosenCollectors (Dosen)
+        $pertanyaansFromDosenCollectors = Pertanyaan::whereHas('dosenCollectors', function ($query) use ($user) {
+            $query->where('dosens.id', $user->id);
+        })
+        ->with(['likes' => function ($query) {
+            $query->select('likeable_id', 'user_id');
+        }, 'mataKuliah', 'collectors', 'dosenCollectors'])
+        ->withCount('jawabans')
+        ->get();
+
+        // Gabungkan hasil query
+        $pertanyaans = $pertanyaansFromCollectors->merge($pertanyaansFromDosenCollectors)->map(function ($pertanyaan) {
             $deskripsi = Str::limit(strip_tags($pertanyaan->deskripsi), 100); // Hanya ambil 100 karakter
 
             // Hitung waktu yang sudah berlalu
@@ -50,12 +65,36 @@ class CollectionController extends Controller
 
     public function addCollection($questionId)
     {
-        auth()->user()->collections()->attach($questionId);
+        $user = auth()->user();
+        $user->collectedPertanyaans()->attach($questionId, ['collectible_id' => $user->id]);
+    
+        // Validasi bahwa pertanyaan ada
+        // $pertanyaan = Pertanyaan::findOrFail($questionId);
+
+        // if ($user->role === 'dosen') {
+        //     $dosen = Dosen::find($user->id); 
+        //     if ($dosen) {
+        //         $dosen->collectedPertanyaans()->attach($pertanyaan);
+        //     }
+        // } else {
+        //     $mahasiswa = User::find($user->id);
+        //     $mahasiswa->collectedPertanyaans()->attach($pertanyaan);
+        // }
     }
 
     // Menghapus Collection
     public function removeCollection($questionId)
     {
-        auth()->user()->collections()->detach($questionId);
+        $user = auth()->user();
+    
+        if ($user->role === 'dosen') {
+            $dosen = Dosen::find($user->id);
+            if ($dosen) {
+                $dosen->collectedPertanyaans()->detach($questionId);
+            }
+        } else {
+            $mahasiswa = User::find($user->id);
+            $mahasiswa->collectedPertanyaans()->detach($questionId);
+        }
     }
 }

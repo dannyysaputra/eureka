@@ -23,4 +23,9 @@ class Jurusan extends Model
     {
         return $this->hasMany(User::class);
     }
+
+    public function dosens() : HasMany
+    {
+        return $this->hasMany(Dosen::class);
+    }
 }

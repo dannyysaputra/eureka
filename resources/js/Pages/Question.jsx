@@ -6,6 +6,7 @@ import { Inertia } from "@inertiajs/inertia";
 
 export default function Question({
     auth,
+    user,
     photoPath,
     pertanyaans,
     topCourses,
@@ -44,7 +45,13 @@ export default function Question({
         const listener = ({ question }) => {
             setQuestions((prevQuestions) =>
                 prevQuestions.map((q) =>
-                    q.id === question.id ? { ...q, likes: question.likes } : q
+                    q.id === question.id
+                        ? {
+                              ...q,
+                              likes: question.likes,
+                              is_validated: question.is_validated,
+                          }
+                        : q
                 )
             );
         };
@@ -92,25 +99,46 @@ export default function Question({
             return 0;
         });
 
-    console.log(questions);
+    console.log("id: ", user.id);
+    const isDosen = user.role === "dosen";
 
     const handleLike = (questionId) => {
         post(`/pertanyaan/${questionId}/like`);
     };
 
     const handleBookmark = (questionId) => {
-        post(`/pertanyaan/${questionId}/add-collection`);
+        if (isDosen) {
+            post(`/dosen/pertanyaan/${questionId}/add-collection`);
+        } else {
+            post(`/pertanyaan/${questionId}/add-collection`);
+        }
     };
 
     const handleUnbookmark = (questionId) => {
-        post(`/pertanyaan/${questionId}/remove-collection`);
+        if (isDosen) {
+            post(`/dosen/pertanyaan/${questionId}/remove-collection`);
+        } else {
+            post(`/pertanyaan/${questionId}/remove-collection`);
+        }
     };
 
-    const userHasBookmarked = (bookmark) => {
-        const userBookmark = bookmark.some(
-            (bookmark) => bookmark.id == auth.user.id
-        );
-        return userBookmark;
+    const userHasBookmarked = (pertanyaan) => {
+        let found = false;
+        const userId = auth.user.id;
+        const userRole = auth.user.role;
+
+        if (pertanyaan.collectors && userRole === "mahasiswa") {
+            found = pertanyaan.collectors.some(
+                (collector) => collector.id === userId
+            );
+        }
+        if (pertanyaan.dosen_collectors && userRole === "dosen") {
+            found = pertanyaan.dosen_collectors.some(
+                (dosenCollector) => dosenCollector.id === userId
+            );
+        }
+
+        return found;
     };
 
     const userHasLiked = (likes) => {
@@ -139,16 +167,18 @@ export default function Question({
                     Semua Pertanyaan
                 </div>
 
-                <div className="">
-                    <a href="ajukan-pertanyaan">
-                        <div
-                            className=" font-extrabold text-white rounded-2xl h-12 w-auto p-3 m-2"
-                            style={{ backgroundColor: "#02AF91" }}
-                        >
-                            Ajukan pertanyaan
-                        </div>
-                    </a>
-                </div>
+                {!isDosen && (
+                    <div className="">
+                        <a href="ajukan-pertanyaan">
+                            <div
+                                className=" font-extrabold text-white rounded-2xl h-12 w-auto p-3 m-2"
+                                style={{ backgroundColor: "#02AF91" }}
+                            >
+                                Ajukan pertanyaan
+                            </div>
+                        </a>
+                    </div>
+                )}
             </div>
             <form onSubmit={handleSearch} className="w-full">
                 <div className="flex justify-center px-8 py-10">
@@ -192,7 +222,13 @@ export default function Question({
             {filteredQuestions?.map((pertanyaan) => (
                 <div className="flex justify-center px-8 mx-4 mt-5">
                     <div className="rounded-lg border bg-gray-300 w-screen h-auto">
-                        <Link href={`/detail-pertanyaan/${pertanyaan.id}`}>
+                        <Link
+                            href={
+                                isDosen
+                                    ? `/dosen/detail-pertanyaan/${pertanyaan.id}`
+                                    : `/detail-pertanyaan/${pertanyaan.id}`
+                            }
+                        >
                             <div className="flex justify-between my-8">
                                 <div className="font-bold mx-6">
                                     {pertanyaan.judul}
@@ -234,9 +270,7 @@ export default function Question({
                                     </div>
                                 </div>
                                 <div className="ms-2">-</div>
-                                <div className="mx-2">
-                                    {pertanyaan.timeAgo}
-                                </div>
+                                <div className="mx-2">{pertanyaan.timeAgo}</div>
                             </div>
                             <div
                                 className="flex flex-row"
@@ -279,7 +313,7 @@ export default function Question({
                                 />
                                 <div className="mx-1">{pertanyaan.insight}</div>
                             </div>
-                            {userHasBookmarked(pertanyaan.collected_by) ? (
+                            {userHasBookmarked(pertanyaan) ? (
                                 <div
                                     className="flex"
                                     onClick={() =>
