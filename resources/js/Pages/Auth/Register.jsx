@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import GuestLayout from "@/Layouts/GuestLayout";
 import InputError from "@/Components/InputError";
 import PrimaryButton from "@/Components/PrimaryButton";
 import ArrowButton from "@/Components/ArrowButton";
 import GoogleLogo from "@/Components/GoogleLogo";
 import TextInput from "@/Components/TextInput";
+import FileInput from "@/Components/FileInput";
 import { Head, Link, useForm } from "@inertiajs/react";
 
 export default function Register({ photoPath, backgroundPath, jurusans }) {
@@ -13,10 +14,13 @@ export default function Register({ photoPath, backgroundPath, jurusans }) {
         email: "",
         nim: "",
         angkatan: "",
+        avatar: null,
         jurusanId: "",
         password: "",
         password_confirmation: "",
     });
+
+    const fileInputRef = useRef(null);
 
     useEffect(() => {
         return () => {
@@ -26,9 +30,26 @@ export default function Register({ photoPath, backgroundPath, jurusans }) {
 
     const submit = (e) => {
         e.preventDefault();
-        console.log(data);
 
-        post(route("register"));
+        const formData = new FormData();
+        formData.append('name', data.name);
+        formData.append('email', data.email);
+        formData.append('nim', data.nim);
+        formData.append('angkatan', data.angkatan);
+        formData.append('avatar', fileInputRef.current.files[0]);
+        formData.append('jurusanId', data.jurusanId);
+        formData.append('password', data.password);
+        formData.append('password_confirmation', data.password_confirmation);
+
+        console.log(formData);
+
+        post(route("register"), {
+            data: formData,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            },
+            onSuccess: () => reset(),
+        });
     };
 
     const formBackgroundStyle = {
@@ -62,7 +83,7 @@ export default function Register({ photoPath, backgroundPath, jurusans }) {
                         </p>
                     </div>
                     <div className="mx-5">
-                        <form onSubmit={submit} className="px-14 py-5">
+                        <form onSubmit={submit} encType="multipart/form-data" className="px-14 py-5">
                             <div className="my-8">
                                 <TextInput
                                     id="name"
@@ -141,6 +162,25 @@ export default function Register({ photoPath, backgroundPath, jurusans }) {
 
                                 <InputError
                                     message={errors.angkatan}
+                                    className="mt-2"
+                                />
+                            </div>
+
+                            <div className="my-8">
+                                <FileInput
+                                    id="avatar"
+                                    name="avatar"
+                                    className="mt-1 block w-full"
+                                    placeholder="Avatar"
+                                    autoComplete="avatar"
+                                    ref={fileInputRef}
+                                    onChange={(e) =>
+                                        setData("avatar", e.target.files[0])
+                                    }
+                                />
+
+                                <InputError
+                                    message={errors.avatar}
                                     className="mt-2"
                                 />
                             </div>

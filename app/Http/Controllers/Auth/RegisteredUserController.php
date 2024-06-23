@@ -40,14 +40,24 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): Response
     {
+        // dd($request);
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'nim' => 'required|string|lowercase|max:11|unique:'.User::class,
             'angkatan' => 'required|string|max:5',
             'jurusanId' => 'required',
+            'avatar' => 'image|nullable',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
+
+        if ($request->hasFile('avatar')) {
+            $avatarPath = $request->file('avatar')->store('public/images');
+            // Ubah path agar sesuai dengan link yang dapat diakses secara publik
+            $avatarPath = str_replace('public/', 'storage/', $avatarPath);
+        } else {
+            $avatarPath = null;
+        }
 
         $user = User::create([
             'id' => Str::uuid(),
@@ -56,6 +66,7 @@ class RegisteredUserController extends Controller
             'nim' => $request->nim,
             'angkatan' => $request->angkatan,
             'jurusan_id' => $request->jurusanId,
+            'avatar' => $avatarPath,
             'password' => Hash::make($request->password),
         ]);
 
@@ -63,6 +74,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return Inertia::render('Question');
+        return Inertia::render('Welcome');
     }
 }
