@@ -49,9 +49,17 @@ export default function Profile({ photoPath, jurusan, user }) {
 
             <div className="flex justify-between my-16 ms-4 me-9">
                 <div className="flex">
-                    <div className="py-8 px-9 border-4 rounded-full border-green-400">
-                        <i class="fa-solid fa-user fa-3x"></i>
-                    </div>
+                    {user.avatar ? (
+                        <img
+                            src={user.avatar}
+                            alt="User Avatar"
+                            className="rounded-full object-cover w-36 h-36"
+                        />
+                    ) : (
+                        <div className="py-8 px-9 border-4 rounded-full border-green-400">
+                            <i class="fa-solid fa-user fa-3x"></i>
+                        </div>
+                    )}
                     <div className="my-auto ms-5">
                         <p className="font-bold text-xl">{user.name}</p>
                         <p>{user.nim || user.nip}</p>
