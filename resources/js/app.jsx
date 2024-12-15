@@ -7,7 +7,7 @@ import { createInertiaApp } from "@inertiajs/react";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import Modal from "react-modal";
 
-Modal.setAppElement('#app');
+Modal.setAppElement("#app");
 
 const appName = import.meta.env.VITE_APP_NAME || "Eureka";
 
@@ -27,3 +27,21 @@ createInertiaApp({
         color: "#4B5563",
     },
 });
+
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker
+            .register("/sw.js")
+            .then((registration) => {
+                console.log("Service Worker registered:", registration);
+            })
+            .catch((error) => {
+                console.error("Service Worker registration failed:", error);
+            });
+
+        // Cek status service worker
+        navigator.serviceWorker.ready.then(function (registration) {
+            console.log("Service Worker ready:", registration);
+        });
+    });
+}
